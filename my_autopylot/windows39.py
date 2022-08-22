@@ -1,3 +1,4 @@
+from xml.etree.ElementTree import QName
 from my_autopylot.CrashHandler import report_error
 
 
@@ -216,7 +217,7 @@ def window_get_all_opened_titles_windows():
         return [status, data]
 
 
-def window_activate_and_maximize_windows(windowName=""):
+def window_maximize_windows(windowName=""):
 
     # Description:
     """
@@ -247,14 +248,8 @@ def window_activate_and_maximize_windows(windowName=""):
         item, window_found = _window_find_exact_name(windowName)
         if window_found:
             windw = gw.getWindowsWithTitle(item)[0]
+            windw.maximize()
 
-            try:
-                windw.activate()
-                windw.maximize()
-            except:
-                windw.minimize()
-                time.sleep(1)
-                windw.maximize()
         else:
             Exception('Window title name {} not found'.format(windowName))
 
@@ -407,53 +402,6 @@ def launch_any_exe_bat_application(pathOfExeFile=""):
             status = True
         except Exception:
             os.startfile(pathOfExeFile)
-
-        # If the function returns a value, it should be assigned to the data variable.
-        # data = value
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
-    else:
-        status = True
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status]
-
-
-def window_restore_windows(windowName=""):
-
-    # Description:
-    """
-    Description:
-        Restores the desired window.
-    Args:
-        windowName  (str) : Name of the window to restore.
-
-    Returns:
-        [status]
-        Status (bool) : True if the window is found.
-    """
-
-    # import section
-    import pygetwindow as gw
-
-    # Response section
-    error = None
-    status = False
-    # data = None
-
-    try:
-        if not windowName:
-            raise Exception('Window title name is empty.')
-
-        item, window_found = _window_find_exact_name(windowName)
-        if window_found:
-            windw = gw.getWindowsWithTitle(item)[0]
-            windw.restore()
-        else:
-            Exception('Window title name {} not found'.format(windowName))
 
         # If the function returns a value, it should be assigned to the data variable.
         # data = value
