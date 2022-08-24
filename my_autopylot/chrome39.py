@@ -10,10 +10,7 @@ output_folder_path = os.path.join(
 if not os.path.exists(output_folder_path):
     os.makedirs(output_folder_path)
 
-
-is_aws = _is_ec2_instance()
-
-
+                
 class DisableLogger():
 
     def __enter__(self):
@@ -67,13 +64,9 @@ class ChromeBrowser:
                     self.options.add_argument(
                         f"profile-directory={profile}")
 
-                if is_aws:
-                    self.browser_driver = webdriver.Chrome(
-                        executable_path=ChromeDriverManager().install(), options=self.options, port=8080)
-                else:
-                    if incognito:
-                        self.options.add_argument("--incognito")
-                    self.browser_driver = webdriver.Chrome(
+                if incognito:
+                    self.options.add_argument("--incognito")
+                self.browser_driver = webdriver.Chrome(
                         ChromeDriverManager().install(), options=self.options)
 
                 helium.set_driver(self.browser_driver)
@@ -174,33 +167,6 @@ class ChromeBrowser:
             status = False
             report_error(ex)
             error = ex
-        finally:
-            if error is not None:
-                raise Exception(error)
-            return [status]
-
-    def set_download_path(self, path: str = ""):
-        """Set the download path for the browser.
-        Args:
-            path (str, optional): The path to set. Defaults: "".
-        Returns:
-            bool: Whether the function is successful or failed.
-        """
-        status = False
-        error = None
-        try:
-            self.browser_driver.command_executor._commands["send_command"] = (
-                "POST", '/session/$sessionId/chromium/send_command')
-            params = {'cmd': 'Page.setDownloadBehavior', 'params': {
-                'behavior': 'allow', 'downloadPath': path}}
-            self.browser_driver.execute("send_command", params)
-            status = True
-        except Exception as ex:
-            # print("Error while setting download path")
-            status = False
-            error = ex
-            report_error(ex)
-
         finally:
             if error is not None:
                 raise Exception(error)
@@ -528,118 +494,6 @@ class ChromeBrowser:
                 raise Exception(error)
             return [status]
 
-    def wait_until(self, text: str = "", element: str = "t", delay=10):
-        """
-        Description:
-            Wait until a specific element is found.
-
-        Args:
-            text (str, optional): To wait until the string appears on the screen. 
-            Eg: Export Successful Completed. Defaults: ""
-            element (str, optional): Type of Element Whether its a Text(t) or Button(b). 
-            Defaults: "t - Text".
-
-        Returns:
-            [status]
-            status (bool): Whether the function is successful or failed.
-        """
-        import helium
-        import sys
-        helium.set_driver(self.browser_driver)
-        status = False
-        error = None
-        try:
-
-            if element.lower() == "t":
-                helium.wait_until(helium.Text(text).exists,
-                                  timeout_secs=delay)  # text
-
-            elif element.lower() == "b":
-                helium.wait_until(helium.Button(text).exists,
-                                  timeout_secs=delay)  # button
-
-            elif element.lower() == "l":
-                helium.wait_until(helium.Link(text).exists,
-                                  timeout_secs=delay)  # Link
-
-            elif element.lower() == "i":
-                helium.wait_until(helium.Image(text).exists,
-                                  timeout_secs=delay)  # Image
-
-            elif element.lower() == "li":
-                helium.wait_until(helium.ListItem(text).exists,
-                                  timeout_secs=delay)  # ListItem
-
-            status = True
-        except TimeoutException:
-            # print(
-            #     "Element not found. Please check the given input or change browser_set_waiting_time().")
-
-            sys.exit()
-            status = False
-        except Exception as ex:
-            status = False
-            report_error(ex)
-            error = ex
-        finally:
-            if error is not None:
-                raise Exception(error)
-            return [status]
-
-    def check_if(self, text: str = "", element: str = "t"):
-        """
-        Description:
-            Check if a specific element is found.
-
-        Args:
-            text (str, optional): To wait until the string appears on the screen. 
-            Eg: Export Successful Completed. Defaults: ""
-            element (str, optional): Type of Element Whether its a Text(t) or Button(b). 
-            Defaults: "t - Text".
-
-        Returns:
-            [status]
-            status (bool): Whether the function is successful or failed.
-        """
-        import helium
-        helium.set_driver(self.browser_driver)
-        status = False
-        error = None
-        try:
-            if element.lower() == "t":
-                status = helium.Text(text).exists()
-            elif element.lower() == "l":
-                status = helium.Link(text).exists()
-            elif element.lower() == "li":
-                status = helium.ListItem(text).exists()
-            elif element.lower() == "b":
-                status = helium.Button(text).exists()
-            elif element.lower() == "i":
-                status = helium.Image(text).exists()
-            elif element.lower() == "tf":
-                status = helium.TextField(text).exists()
-            elif element.lower() == "cob":
-                status = helium.ComboBox(text).exists()
-            elif element.lower() == "chb":
-                status = helium.CheckBox(text).exists()
-            elif element.lower() == "rb":
-                status = helium.RadioButton(text).exists()
-            else:
-                text_to_speech_error(
-                    "Invalid Input for function checking if element is present.")
-        except TimeoutException:
-            pass
-            # print(
-            #     "Element not found. Please check the given input or change browser_set_waiting_time().")
-        except Exception as ex:
-            status = False
-            report_error(ex)
-            error = ex
-        finally:
-            if error is not None:
-                raise Exception(error)
-            return [status]
-
     def refresh_page(self):
         """
         Description:
@@ -724,70 +578,6 @@ class ChromeBrowser:
                 raise Exception(error)
             return [status, data]
 
-    def get_element_image(self, element_xpath: str = "", base64_image: bool = True, image_name: str = ""):
-        """Get the image of the element.
-        Args:
-            element_xpath (str, optional): The xpath of the element. Defaults: ""
-        Returns:
-            bool: Whether the function is successful or failed.
-            str: The image of the element.
-        """
-
-        # Imports
-        from os.path import abspath
-        import os
-        status = False
-        data = None
-        error = None
-        try:
-            element = self.browser_driver.find_element_by_xpath(element_xpath)
-            if base64_image:
-                data = element.screenshot_as_base64
-            else:
-                if image_name == "":
-                    image_name = f"Element-{str(element.id)}.png"
-                    image_path = os.path.join(output_folder_path, image_name)
-                else:
-                    # check if the image name is a path
-                    if os.path.isdir(image_name):
-                        image_path = os.path.join(
-                            image_name, f"Element-{str(element.id)}.png")
-                    elif os.path.isfile(image_name):
-                        image_path = os.path.abspath(image_name)
-                    elif os.path.isdir(os.path.dirname(image_name)):
-                        # check whether is has a extension
-                        img_extension = os.path.splitext(image_name)[1]
-                        img_dir = os.path.dirname(image_name)
-                        img_name = os.path.basename(image_name).split('.')[0]
-                        if img_extension == "":
-                            image_path = os.path.join(
-                                img_dir, f"{str(img_name)}.png")
-                        else:
-                            img_extension = ".png"
-
-                            image_path = os.path.join(
-                                img_dir, f"{str(img_name)}{img_extension}")
-                    else:
-                        img_name = os.path.basename(image_name).split('.')[0]
-                        image_path = os.path.join(
-                            output_folder_path, f"{str(img_name)}.png")
-
-                try:
-                    element.screenshot(image_path)
-                except UserWarning:
-                    pass
-                else:
-                    status = True
-                    data = abspath(image_path)
-        except Exception as ex:
-            status = False
-            report_error(ex)
-            error = ex
-        finally:
-            if error is not None:
-                raise Exception(error)
-            return [status, data]
-
     def close(self):
         """
         Description:
@@ -817,158 +607,6 @@ class ChromeBrowser:
 
     def __str__(self):
         return f"Chrome Browser with options: {self.options}"
-
-    # Finding browser elements relative to others
-    def get_value_relatively(self, element_type="Text", above="", below="", to_left_of="", to_right_of=""):
-        #Link, Image, Button, TextField, CheckBox,
-        """
-        Description:
-            Text Element : Get the value of the element
-            Link Element : Get the text of the element
-            Button Element : Performs single left click on the element
-
-        Args:
-            element_type (str, optional): The type of the element. Defaults: "Text".
-            above (str, optional): The xpath of the element above. Defaults: "".
-            below (str, optional): The xpath of the element below. Defaults: "".
-            to_left_of (str, optional): The xpath of the element to the left of. Defaults: "".
-            to_right_of (str, optional): The xpath of the element to the right of. Defaults: "".
-
-        Returns:
-            [status, data]
-            status (bool): Whether the function is successful or failed.
-            data (str): The value of the element.
-
-        """
-
-        status = False
-        data = ""
-        import helium
-
-        status = False
-        data = None
-
-        try:
-            if element_type == "Text":
-                if above != "" and below != "" and to_left_of != "" and to_right_of != "":
-                    data = helium.Text(
-                        above=above, below=below, to_left_of=to_left_of, to_right_of=to_right_of).value
-
-                elif above != "" and below != "" and to_left_of != "" and to_right_of == "":
-                    data = helium.Text(
-                        above=above, below=below, to_left_of=to_left_of).value
-
-                elif above != "" and below != "" and to_left_of == "" and to_right_of != "":
-                    data = helium.Text(
-                        above=above, below=below, to_right_of=to_right_of).value
-
-                elif above != "" and below != "" and to_left_of == "" and to_right_of == "":
-                    data = helium.Text(above=above, below=below).value
-
-                elif above != "" and below == "" and to_left_of != "" and to_right_of != "":
-                    data = helium.Text(
-                        above=above, to_left_of=to_left_of, to_right_of=to_right_of).value
-
-                elif above != "" and below == "" and to_left_of != "" and to_right_of == "":
-                    data = helium.Text(
-                        above=above, to_left_of=to_left_of).value
-
-                elif above != "" and below == "" and to_left_of == "" and to_right_of != "":
-                    data = helium.Text(
-                        above=above, to_right_of=to_right_of).value
-
-                elif above != "" and below == "" and to_left_of == "" and to_right_of == "":
-                    data = helium.Text(above=above).value
-
-                elif above == "" and below != "" and to_left_of != "" and to_right_of != "":
-                    data = helium.Text(
-                        below=below, to_left_of=to_left_of, to_right_of=to_right_of).value
-
-                elif above == "" and below != "" and to_left_of != "" and to_right_of == "":
-                    data = helium.Text(
-                        below=below, to_left_of=to_left_of).value
-
-                elif above == "" and below != "" and to_left_of == "" and to_right_of != "":
-                    data = helium.Text(
-                        below=below, to_right_of=to_right_of).value
-
-                elif above == "" and below != "" and to_left_of == "" and to_right_of == "":
-                    data = helium.Text(below=below).value
-
-                elif above == "" and below == "" and to_left_of != "" and to_right_of != "":
-                    data = helium.Text(to_left_of=to_left_of,
-                                       to_right_of=to_right_of).value
-
-                elif above == "" and below == "" and to_left_of != "" and to_right_of == "":
-                    data = helium.Text(to_left_of=to_left_of).value
-
-                elif above == "" and below == "" and to_left_of == "" and to_right_of != "":
-                    data = helium.Text(to_right_of=to_right_of).value
-
-            elif element_type == "Button":
-                if above != "" and below != "" and to_left_of != "" and to_right_of != "":
-                    data = helium.click(helium.Button(
-                        above=above, below=below, to_left_of=to_left_of, to_right_of=to_right_of))
-
-                elif above != "" and below != "" and to_left_of != "" and to_right_of == "":
-                    data = helium.click(helium.Button(
-                        above=above, below=below, to_left_of=to_left_of))
-
-                elif above != "" and below != "" and to_left_of == "" and to_right_of != "":
-                    data = helium.click(helium.Button(
-                        above=above, below=below, to_right_of=to_right_of))
-
-                elif above != "" and below != "" and to_left_of == "" and to_right_of == "":
-                    data = helium.click(
-                        helium.Button(above=above, below=below))
-
-                elif above != "" and below == "" and to_left_of != "" and to_right_of != "":
-                    data = helium.click(helium.Button(
-                        above=above, to_left_of=to_left_of, to_right_of=to_right_of))
-
-                elif above != "" and below == "" and to_left_of != "" and to_right_of == "":
-                    data = helium.click(helium.Button(
-                        above=above, to_left_of=to_left_of))
-
-                elif above != "" and below == "" and to_left_of == "" and to_right_of != "":
-                    data = helium.click(helium.Button(
-                        above=above, to_right_of=to_right_of))
-
-                elif above != "" and below == "" and to_left_of == "" and to_right_of == "":
-                    data = helium.click(helium.Button(above=above))
-
-                elif above == "" and below != "" and to_left_of != "" and to_right_of != "":
-                    data = helium.click(helium.Button(
-                        below=below, to_left_of=to_left_of, to_right_of=to_right_of))
-
-                elif above == "" and below != "" and to_left_of != "" and to_right_of == "":
-                    data = helium.click(helium.Button(
-                        below=below, to_left_of=to_left_of))
-
-                elif above == "" and below != "" and to_left_of == "" and to_right_of != "":
-                    data = helium.click(helium.Button(
-                        below=below, to_right_of=to_right_of))
-
-                elif above == "" and below != "" and to_left_of == "" and to_right_of == "":
-                    data = helium.click(helium.Button(below=below))
-
-                elif above == "" and below == "" and to_left_of != "" and to_right_of != "":
-                    data = helium.click(helium.Button(
-                        to_left_of=to_left_of, to_right_of=to_right_of))
-
-                elif above == "" and below == "" and to_left_of != "" and to_right_of == "":
-                    data = helium.click(helium.Button(to_left_of=to_left_of))
-
-                elif above == "" and below == "" and to_left_of == "" and to_right_of != "":
-                    data = helium.click(helium.Button(to_right_of=to_right_of))
-
-            # print(data)
-
-            status = True
-        except Exception as e:
-            report_error(e)
-        finally:
-            return [status, data]
 
 # def main():
 #     browser = ChromeBrowser()
