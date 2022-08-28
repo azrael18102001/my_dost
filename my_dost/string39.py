@@ -12,7 +12,7 @@ def string_extract_only_alphabets(inputString=""):
     """
 
     # import section
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
     # Response section
     error = None
     status = False
@@ -50,7 +50,7 @@ def string_extract_only_numbers(inputString=""):
     """
 
     # import section
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
 
     # Response section
     error = None
@@ -90,7 +90,7 @@ def string_remove_special_characters(inputStr=""):
     """
 
     # import section
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
 
     # Response section
     error = None

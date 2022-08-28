@@ -1,5 +1,5 @@
 import os
-from my_autopylot.CrashHandler import report_error
+from my_dost.CrashHandler import report_error
 
 output_folder_path = os.path.join(
     os.path.abspath(r'C:\Users\Public\PyBots'), 'My-AutoPylot', 'Converters Folder')
@@ -20,7 +20,7 @@ def convert_csv_to_excel(input_file="", sep=",", output_folder="", output_filena
         [bool]: [status]
     """
     # Import section
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
     import os
     from pathlib import Path
     import pandas as pd
@@ -84,7 +84,7 @@ def get_image_from_base64(input_text="", output_folder="", output_filename=""):
     import base64
     import os
     import datetime
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
 
     # Response Section
     error = None
@@ -141,7 +141,7 @@ def convert_image_to_base64(input_file=""):
     # Import section
     import base64
     import os
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
 
     # Response section
     error = None
@@ -178,7 +178,7 @@ def excel_change_corrupt_xls_to_xlsx(input_file='', input_sheetname='', output_f
 
     # Import section
     import os
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
     import io
     from xlwt import Workbook
     from xls2xlsx import XLS2XLSX
@@ -251,7 +251,7 @@ def excel_convert_xls_to_xlsx(input_file='', output_folder='', output_filename='
     Converts given XLS file to XLSX
     """
     # Import section
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
     import os
     from xls2xlsx import XLS2XLSX
     from pathlib import Path

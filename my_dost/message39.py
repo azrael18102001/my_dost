@@ -21,11 +21,11 @@ def msg_box_info(msg_for_user=""):
             tk.messagebox.showinfo('PyBOTs', msg_for_user, parent=root)
             root.destroy()
         else:
-            from my_autopylot.CrashHandler import text_to_speech_error
+            from my_dost.CrashHandler import text_to_speech_error
             text_to_speech_error("Message cannot be empty")
 
     except Exception as ex:
-        from my_autopylot.CrashHandler import report_error
+        from my_dost.CrashHandler import report_error
         report_error(ex)
         return [False]
     else:

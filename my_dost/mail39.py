@@ -18,7 +18,7 @@ def send_gmail_using_app_password(gmail_username="", gmail_app_password="", to_e
 
     # Import Section
     import os
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
     from pathlib import Path
     import yagmail
 

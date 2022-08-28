@@ -1,6 +1,6 @@
-from my_autopylot.helpers import _is_ec2_instance
+from my_dost.helpers import _is_ec2_instance
 import logging
-from my_autopylot.CrashHandler import report_error, text_to_speech_error
+from my_dost.CrashHandler import report_error, text_to_speech_error
 from selenium.common.exceptions import TimeoutException
 import os
 

@@ -1,6 +1,6 @@
-from my_autopylot.CrashHandler import report_error
+from my_dost.CrashHandler import report_error
 
-from my_autopylot.helpers import _is_speaker_available
+from my_dost.helpers import _is_speaker_available
 is_speaker_connected = _is_speaker_available()
 
 

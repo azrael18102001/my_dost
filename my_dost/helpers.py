@@ -14,7 +14,7 @@ def _is_speaker_available():
     try:
         import pyaudio
     except:
-        from my_autopylot.CrashHandler import install_pyaudio
+        from my_dost.CrashHandler import install_pyaudio
         install_pyaudio()
         import pyaudio
 

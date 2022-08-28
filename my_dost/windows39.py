@@ -1,5 +1,5 @@
 from xml.etree.ElementTree import QName
-from my_autopylot.CrashHandler import report_error
+from my_dost.CrashHandler import report_error
 
 
 def _window_find_exact_name(windowName=""):

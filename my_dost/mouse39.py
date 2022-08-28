@@ -1,4 +1,4 @@
-from my_autopylot.CrashHandler import report_error
+from my_dost.CrashHandler import report_error
 
 
 def mouse_click(x='', y='', left_or_right="left", no_of_clicks=1, type_of_movement="abs"):

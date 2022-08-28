@@ -21,7 +21,7 @@ def authenticate_google_spreadsheet(credential_file_path=""):
     """
 
     # import section
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
     import gspread
     from oauth2client.service_account import ServiceAccountCredentials
 
@@ -74,7 +74,7 @@ def excel_get_dataframe_from_google_spreadsheet(auth, spreadsheet_url="", sheet_
     """
 
     # import section
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
     import pandas as pd
 
     # Response section
@@ -146,7 +146,7 @@ def excel_tabular_data_from_website(website_url="", table_number=""):
 
     # Import Section
     import pandas as pd
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
 
     # Response Section
     error = None
@@ -206,7 +206,7 @@ def excel_upload_dataframe_to_google_spreadsheet(auth, spreadsheet_url="", sheet
     """
 
     # import section
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
     from gspread_dataframe import set_with_dataframe
     import pandas as pd
 
@@ -298,7 +298,7 @@ def excel_create_file(output_folder="", output_filename="", output_sheetname="Sh
     """
 
     # Import section
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
     import os
     from pathlib import Path
     from openpyxl import Workbook
@@ -362,7 +362,7 @@ def valid_data(input_filepath, input_sheetname: str = "", validate_filepath=True
 
     import os
     from openpyxl import load_workbook
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
 
     try:
         input_filepath = str(input_filepath)
@@ -407,7 +407,7 @@ def excel_to_dataframe(input_filepath="", input_sheetname="Sheet1", header=1):
 
     # import section
     import pandas as pd
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
 
     # Response section
     error = None
@@ -462,7 +462,7 @@ def excel_get_row_column_count(df):
 
     # import section
     import pandas as pd
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
 
     # Response section
     error = None
@@ -514,7 +514,7 @@ def dataframe_to_excel(df, output_folder="", output_filename="", output_sheetnam
     import pandas as pd
     import os
     from pathlib import Path
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
 
     # Response section
     error = None
@@ -596,7 +596,7 @@ def excel_set_single_cell(df, column_name="", cell_number=1, text=""):
 
     # import section
     import pandas as pd
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
 
     # Response section
     error = None
@@ -657,7 +657,7 @@ def excel_get_single_cell(df, header=1, column_name="", cell_number=1):
 
     # import section
     import pandas as pd
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
 
     # Response section
     error = None
@@ -717,7 +717,7 @@ def excel_get_all_header_columns(df):
 
     # import section
     import pandas as pd
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
     # Response section
     error = None
     status = False
@@ -763,7 +763,7 @@ def excel_get_all_sheet_names(input_filepath=""):
 
     # import section
     from openpyxl import load_workbook
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
 
     # Response section
     error = None
@@ -818,7 +818,7 @@ def excel_drop_columns(df, cols=""):
 
     # import section
     import pandas as pd
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
 
     # Response section
     error = None
@@ -873,7 +873,7 @@ def excel_clear_sheet(df):
 
     # import section
     import pandas as pd
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
 
     # Response section
     error = None
@@ -925,7 +925,7 @@ def excel_remove_duplicates(df, column_name=""):
 
     # import section
     import pandas as pd
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
 
     # Response section
     error = None
@@ -983,7 +983,7 @@ def isNaN(value=""):
     """
 
     # import section
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
 
     # Response section
     error = None
@@ -1024,7 +1024,7 @@ def df_from_list(list_of_lists, column_names=None):
     """
     # import section
     import pandas as pd
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
 
     # Response section
     error = None
@@ -1077,7 +1077,7 @@ def df_from_string(df_string: str, word_delimeter=" ", line_delimeter="\n", colu
     """
     # import section
     import pandas as pd
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
 
     # Response section
     error = None
@@ -1131,7 +1131,7 @@ def df_extract_sub_df(df, row_start: int, row_end: int, column_start: int, colum
     """
     # import section
     import pandas as pd
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
 
     # Response section
     error = None
@@ -1181,7 +1181,7 @@ def set_value_in_df(df, row_number: int, column_number: int, value):
     """
     # import section
     import pandas as pd
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
 
     # Response section
     error = None
@@ -1239,7 +1239,7 @@ def get_value_in_df(df, row_number: int, column_number: int):
     """
     # import section
     import pandas as pd
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
 
     # Response section
     error = None
@@ -1294,7 +1294,7 @@ def df_drop_rows(df, row_start: int, row_end: int):
     """
     # import section
     import pandas as pd
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
 
     # Response section
     error = None

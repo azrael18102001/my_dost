@@ -23,7 +23,7 @@ def pdf_extract_all_tables(pdf_file_path: str = "", output_folder: str = "", out
     import pdfplumber
     import pandas as pd
     import datetime
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
 
     # Response Section
     error = None

@@ -1,4 +1,4 @@
-from my_autopylot.CrashHandler import report_error
+from my_dost.CrashHandler import report_error
 
 
 def key_press(key_1='', key_2='', key_3='', write_to_window=""):
@@ -24,7 +24,7 @@ def key_press(key_1='', key_2='', key_3='', write_to_window=""):
 
     # import section
     import pywinauto as pwa
-    from my_autopylot.Engine import window_activate_window
+    from my_dost.Engine import window_activate_window
 
     # Response section
     error = None
@@ -122,7 +122,7 @@ def key_write_enter(text_to_write="", write_to_window="", key="e"):
     # import section
     import time
     import pywinauto as pwa
-    from my_autopylot.Engine import window_activate_window
+    from my_dost.Engine import window_activate_window
     # Response section
     error = None
     status = False
@@ -175,7 +175,7 @@ def key_hit_enter(write_to_window=""):
 
     # import section
     import pywinauto as pwa
-    from my_autopylot.Engine import window_activate_window
+    from my_dost.Engine import window_activate_window
 
     # Response section
     error = None

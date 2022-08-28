@@ -1,4 +1,4 @@
-from my_autopylot.CrashHandler import report_error
+from my_dost.CrashHandler import report_error
 
 
 def folder_read_text_file(txt_file_path=""):

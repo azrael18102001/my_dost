@@ -14,7 +14,7 @@ def clipboard_set_data(data, format_id=win32clipboard.CF_UNICODETEXT):
     """
 
     # Import Section
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
     import win32clipboard
 
     # Response section
@@ -69,7 +69,7 @@ def clipboard_get_data(format_id=win32clipboard.CF_UNICODETEXT):
     """
 
     # Import Section
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
     import win32clipboard
 
     # Response section

@@ -1,7 +1,8 @@
 import getopt 
 import sys
 
-__version__ = '0.0.1'
+__version__ = '1.0'
+__release_id__ = 1
 __author__ = 'PyBOTs LLC'
 __email__ = 'support@pybots.ai'
 
@@ -15,6 +16,5 @@ arguments, values = getopt.getopt(
     argument_list, short_options, long_options)
 for current_argument, current_value in arguments:
     if current_argument in ("-v", "--version"):
-        print(f"{__version__}")
+        print(f"{__version__},{__release_id__}")
         sys.exit(0)
-

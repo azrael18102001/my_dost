@@ -72,7 +72,7 @@ def text_to_speech_offline(audio, show=True, rate=170):
     import random
     import pyttsx3
     import sys
-    from my_autopylot.helpers import _is_speaker_available
+    from my_dost.helpers import _is_speaker_available
     is_speaker_available = _is_speaker_available()
 
     try:

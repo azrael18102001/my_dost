@@ -1,5 +1,5 @@
 import win32clipboard
-from my_autopylot.CrashHandler import report_error
+from my_dost.CrashHandler import report_error
 
 
 def pause_program(seconds="5"):
@@ -112,7 +112,7 @@ def clipboard_set_data(data, format_id=win32clipboard.CF_UNICODETEXT):
     """
 
     # Import Section
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
     import win32clipboard
 
     # Response section
@@ -167,7 +167,7 @@ def clipboard_get_data(format_id=win32clipboard.CF_UNICODETEXT):
     """
 
     # Import Section
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
     import win32clipboard
 
     # Response section
@@ -260,7 +260,7 @@ def image_to_text(image_path):
     # Imports
     from PIL import Image
     import pytesseract
-    from my_autopylot.CrashHandler import report_error
+    from my_dost.CrashHandler import report_error
 
     # Response section
     status = False
