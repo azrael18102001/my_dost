@@ -68,4 +68,4 @@ def send_gmail_using_app_password(gmail_username="", gmail_app_password="", to_e
 
 
 # send_gmail_using_app_password(gmail_username="admin@pybots.ai", gmail_app_password="wlfyprdcupvvofnd", to_email_id="mmv@pybots.ai", subject="Test Attachments",
-#                               message="Test Body Message", attachment_path=[r"C:\Users\PyBots\Desktop\dummy.xlsx", r"C:\Users\PyBots\Desktop\Function Template For My-AutoPylot.py"])
+#                               message="Test Body Message", attachment_path=[r"C:\Users\PyBots\Desktop\dummy.xlsx", r"C:\Users\PyBots\Desktop\Function Template For My-DOST.py"])

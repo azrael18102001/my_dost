@@ -1,6 +1,6 @@
 import os
 output_folder_path = os.path.join(
-    os.path.abspath(r'C:\Users\Public\PyBots'), 'My-AutoPylot', 'PDF Folder')
+    os.path.abspath(r'C:\Users\Public\PyBots'), 'My-DOST', 'PDF Folder')
 
 # create output folder if not present
 if not os.path.exists(output_folder_path):

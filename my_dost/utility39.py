@@ -229,7 +229,7 @@ def clear_output():
 
 def install_module(module_name):
     try:
-        if module_name != "my_autopylot":
+        if module_name != "my_dost":
             import subprocess
             import sys
             subprocess.call([sys.executable, "-m", "pip",
@@ -241,14 +241,14 @@ def install_module(module_name):
 
 def uninstall_module(module_name):
     try:
-        if module_name != "my_autopylot":
+        if module_name != "my_dost":
             import subprocess
             import sys
             subprocess.call([sys.executable, "-m", "pip",
                             "uninstall", "-y", module_name])
         else:
             raise Exception(
-                "You cannot uninstall my_autopylot from here.")
+                "You cannot uninstall my_dost from here.")
     except:
         raise Exception("Sorry, I could not uninstall the module {}".format(
             module_name))
