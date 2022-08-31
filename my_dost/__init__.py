@@ -18,3 +18,5 @@ for current_argument, current_value in arguments:
     if current_argument in ("-v", "--version"):
         print(f"{__version__},{__release_id__}")
         sys.exit(0)
+
+from my_dost.Engine import *

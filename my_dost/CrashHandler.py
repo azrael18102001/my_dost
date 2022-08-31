@@ -229,3 +229,27 @@ def install_pyaudio():
     else:
         pass
 
+def report_error(ex: Exception):
+
+    exception_name = type(ex).__name__
+    exception_message = str(ex)
+    exception_line = str(ex.__traceback__.tb_lineno)
+
+    if len(exception_message) > 100:
+        exception_message = exception_message[:100]
+
+    text_to_speech_error("You got a {}. Please check the line number {} .It describes as {}.".format(
+        exception_name, exception_line, exception_message))
+
+def report_error_user(ex: Exception):
+
+    exception_name = type(ex).__name__
+    exception_message = str(ex)
+    exception_line = str(ex.__traceback__.tb_lineno)
+
+    if len(exception_message) > 100:
+        exception_message = exception_message[:100]
+
+    text_to_speech_error("You got a {}. Please check the line number {} .It describes as {}.".format(
+        exception_name, exception_line, exception_message))
+
