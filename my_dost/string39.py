@@ -17,9 +17,6 @@ def string_extract_only_alphabets(inputString=""):
     error = None
     data = None
 
-    if not inputString:
-        raise Exception("Input String cannot be empty")
-
     data = ''.join(e for e in inputString if e.isalpha())
 
     # If the function returns a value, it should be assigned to the data variable.
