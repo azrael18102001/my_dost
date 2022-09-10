@@ -97,23 +97,10 @@ class ChromeBrowser:
         error = None
         import helium
         helium.set_driver(self.browser_driver)
-        try:
-            if not url:
-                helium.go_to("https://www.pybots.ai")
-            else:
-                helium.go_to(url)
-        except Exception as ex:
-            status = False
-            error = ex
-            report_error(ex)
-            # print("Error while navigating to url")
-
+        if not url:
+            helium.go_to("https://www.pybots.ai")
         else:
-            status = True
-        finally:
-            if error is not None:
-                raise Exception(error)
-            return [status]
+            helium.go_to(url)
 
     def write(self, text: str = '', user_visible_text_element: str = ""):
         """
@@ -131,45 +118,45 @@ class ChromeBrowser:
             status (bool): Whether the function is successful or failed.
         """
 
-        status = False
+        # status = False
         error = None
         import helium
         import time
         from selenium.common.exceptions import WebDriverException
         # import sys
         helium.set_driver(self.browser_driver)
-        try:
+        # try:
 
-            if text and str(user_visible_text_element).strip():
-                if self.check_if(user_visible_text_element, "t")[0]:
-                    helium.write(text, into=user_visible_text_element)
-                    status = True
-                else:
-                    status = False
-
-            if text and not str(user_visible_text_element).strip():
-                helium.write(text)
+        if text and str(user_visible_text_element).strip():
+            if self.check_if(user_visible_text_element, "t")[0]:
+                helium.write(text, into=user_visible_text_element)
                 status = True
+            else:
+                status = False
 
-        except TimeoutException:
-            print(
-                "Element not found. Please check the given input or change browser_set_waiting_time().")
-            # sys.exit()
-        except WebDriverException as e:
-            message = str(e)
-            if "loading status" in message:
-                time.sleep(2)
-                self.write(text, user_visible_text_element)
-        except AttributeError:
-            print("Invalid Input given for function browser write")
-        except Exception as ex:
-            status = False
-            report_error(ex)
-            error = ex
-        finally:
-            if error is not None:
-                raise Exception(error)
-            return [status]
+        if text and not str(user_visible_text_element).strip():
+            helium.write(text)
+            status = True
+
+        # except TimeoutException:
+        #     print(
+        #         "Element not found. Please check the given input or change browser_set_waiting_time().")
+        #     # sys.exit()
+        # except WebDriverException as e:
+        #     message = str(e)
+        #     if "loading status" in message:
+        #         time.sleep(2)
+        #         self.write(text, user_visible_text_element)
+        # except AttributeError:
+        #     print("Invalid Input given for function browser write")
+        # except Exception as ex:
+        #     status = False
+        #     report_error(ex)
+        #     error = ex
+        # finally:
+        #     if error is not None:
+        #         raise Exception(error)
+        #     return [status]
 
     def mouse(self, value: str = "", action_type: str = "single", value_type: str = "t"):
         """
@@ -196,186 +183,186 @@ class ChromeBrowser:
         error = None
         helium.set_driver(self.browser_driver)
 
-        try:
-            if not action_type:
-                text_to_speech_error("Please provide click type", show=False)
-            if not value:
-                text_to_speech_error("Please provide value", show=False)
-            if not value_type:
-                text_to_speech_error("Please provide type", show=False)
+        # try:
+        if not action_type:
+            text_to_speech_error("Please provide click type", show=False)
+        if not value:
+            text_to_speech_error("Please provide value", show=False)
+        if not value_type:
+            text_to_speech_error("Please provide type", show=False)
 
-            possible_value_types = ["t", "b", "l", "cb",
-                                    "rb", "i", "xp", "li"]
-            possible_clicks = ["single", "double", "right", "hover"]
+        possible_value_types = ["t", "b", "l", "cb",
+                                "rb", "i", "xp", "li"]
+        possible_clicks = ["single", "double", "right", "hover"]
 
-            if not value_type in possible_value_types:
-                text_to_speech_error(
-                    "Value type is invalid for function mouse.", show=False)
-            if not action_type in possible_clicks:
-                text_to_speech_error(
-                    "Click type is invalid for function mouse", show=False)
+        if not value_type in possible_value_types:
+            text_to_speech_error(
+                "Value type is invalid for function mouse.", show=False)
+        if not action_type in possible_clicks:
+            text_to_speech_error(
+                "Click type is invalid for function mouse", show=False)
 
-            if value_type == "xp":
-                if action_type == "single":
-                    self.browser_driver.find_element_by_xpath(
-                        value).click()
-                    status = True
-                elif action_type == "double":
-                    _element = self.browser_driver.find_element_by_xpath(
-                        value)
-                    helium.doubleclick(_element)
-                    status = True
-                elif action_type == "right":
-                    _element = self.browser_driver.find_element_by_xpath(
-                        value)
-                    helium.rightclick(_element)
-                    status = True
-                elif action_type == "hover":
-                    _element = self.browser_driver.find_element_by_xpath(
-                        value)
-                    helium.hover(_element)
-                    status = True
-            else:
-                if self.check_if(value, value_type)[0]:
-                    if value_type == "t":
-                        if action_type == "single":
-                            helium.click(value)
-                            status = True
-                        elif action_type == "double":
-                            helium.doubleclick(value)
-                            status = True
-                        elif action_type == "right":
-                            helium.rightclick(value)
-                            status = True
-                        elif action_type == "hover":
-                            helium.hover(value)
-                            status = True
-                    elif value_type == "l":
-                        if action_type == "single":
-                            helium.click(helium.Link(value))
-                            status = True
-                        elif action_type == "double":
-                            helium.doubleclick(helium.Link(value))
-                            status = True
-                        elif action_type == "right":
-                            helium.rightclick(helium.Link(value))
-                            status = True
-                        elif action_type == "hover":
-                            helium.hover(helium.Link(value))
-                            status = True
-                    elif value_type == "li":
-                        if action_type == "single":
-                            helium.click(helium.ListItem(value))
-                            status = True
-                        elif action_type == "double":
-                            helium.doubleclick(helium.ListItem(value))
-                            status = True
-                        elif action_type == "right":
-                            helium.rightclick(helium.ListItem(value))
-                            status = True
-                        elif action_type == "hover":
-                            helium.hover(helium.ListItem(value))
-                            status = True
-                    elif value_type == "b":
-                        if action_type == "single":
-                            helium.click(helium.Button(value))
-                            status = True
-                        elif action_type == "double":
-                            helium.doubleclick(helium.Button(value))
-                            status = True
-                        elif action_type == "right":
-                            helium.rightclick(helium.Button(value))
-                            status = True
-                        elif action_type == "hover":
-                            helium.hover(helium.Button(value))
-                            status = True
-                    elif value_type == "i":
-                        if action_type == "single":
-                            helium.click(helium.Image(value))
-                            status = True
-                        elif action_type == "double":
-                            helium.doubleclick(helium.Image(value))
-                            status = True
-                        elif action_type == "right":
-                            helium.rightclick(helium.Image(value))
-                            status = True
-                        elif action_type == "hover":
-                            helium.hover(helium.Image(value))
-                            status = True
-                    elif value_type == "tf":
-                        if action_type == "single":
-                            helium.click(helium.TextField(value))
-                            status = True
-                        elif action_type == "double":
-                            helium.doubleclick(helium.TextField(value))
-                            status = True
-                        elif action_type == "right":
-                            helium.rightclick(helium.TextField(value))
-                            status = True
-                        elif action_type == "hover":
-                            helium.hover(helium.TextField(value))
-                            status = True
-                    elif value_type == "cob":
-                        if action_type == "single":
-                            helium.click(helium.ComboBox(value))
-                            status = True
-                        elif action_type == "double":
-                            helium.doubleclick(helium.ComboBox(value))
-                            status = True
-                        elif action_type == "right":
-                            helium.rightclick(helium.ComboBox(value))
-                            status = True
-                        elif action_type == "hover":
-                            helium.hover(helium.ComboBox(value))
-                            status = True
-                    elif value_type == "chb":
-                        if action_type == "single":
-                            helium.click(helium.Checkbox(value))
-                            status = True
-                        elif action_type == "double":
-                            helium.doubleclick(helium.Checkbox(value))
-                            status = True
-                        elif action_type == "right":
-                            helium.rightclick(helium.Checkbox(value))
-                            status = True
-                        elif action_type == "hover":
-                            helium.hover(helium.Checkbox(value))
-                            status = True
-                    elif value_type == "rb":
-                        if action_type == "single":
-                            helium.click(helium.RadioButton(value))
-                            status = True
-                        elif action_type == "double":
-                            helium.doubleclick(helium.RadioButton(value))
-                            status = True
-                        elif action_type == "right":
-                            helium.rightclick(helium.RadioButton(value))
-                            status = True
-                        elif action_type == "hover":
-                            helium.hover(helium.RadioButton(value))
-                            status = True
-                    else:
-                        status = False
+        if value_type == "xp":
+            if action_type == "single":
+                self.browser_driver.find_element_by_xpath(
+                    value).click()
+                status = True
+            elif action_type == "double":
+                _element = self.browser_driver.find_element_by_xpath(
+                    value)
+                helium.doubleclick(_element)
+                status = True
+            elif action_type == "right":
+                _element = self.browser_driver.find_element_by_xpath(
+                    value)
+                helium.rightclick(_element)
+                status = True
+            elif action_type == "hover":
+                _element = self.browser_driver.find_element_by_xpath(
+                    value)
+                helium.hover(_element)
+                status = True
+        else:
+            if self.check_if(value, value_type)[0]:
+                if value_type == "t":
+                    if action_type == "single":
+                        helium.click(value)
+                        status = True
+                    elif action_type == "double":
+                        helium.doubleclick(value)
+                        status = True
+                    elif action_type == "right":
+                        helium.rightclick(value)
+                        status = True
+                    elif action_type == "hover":
+                        helium.hover(value)
+                        status = True
+                elif value_type == "l":
+                    if action_type == "single":
+                        helium.click(helium.Link(value))
+                        status = True
+                    elif action_type == "double":
+                        helium.doubleclick(helium.Link(value))
+                        status = True
+                    elif action_type == "right":
+                        helium.rightclick(helium.Link(value))
+                        status = True
+                    elif action_type == "hover":
+                        helium.hover(helium.Link(value))
+                        status = True
+                elif value_type == "li":
+                    if action_type == "single":
+                        helium.click(helium.ListItem(value))
+                        status = True
+                    elif action_type == "double":
+                        helium.doubleclick(helium.ListItem(value))
+                        status = True
+                    elif action_type == "right":
+                        helium.rightclick(helium.ListItem(value))
+                        status = True
+                    elif action_type == "hover":
+                        helium.hover(helium.ListItem(value))
+                        status = True
+                elif value_type == "b":
+                    if action_type == "single":
+                        helium.click(helium.Button(value))
+                        status = True
+                    elif action_type == "double":
+                        helium.doubleclick(helium.Button(value))
+                        status = True
+                    elif action_type == "right":
+                        helium.rightclick(helium.Button(value))
+                        status = True
+                    elif action_type == "hover":
+                        helium.hover(helium.Button(value))
+                        status = True
+                elif value_type == "i":
+                    if action_type == "single":
+                        helium.click(helium.Image(value))
+                        status = True
+                    elif action_type == "double":
+                        helium.doubleclick(helium.Image(value))
+                        status = True
+                    elif action_type == "right":
+                        helium.rightclick(helium.Image(value))
+                        status = True
+                    elif action_type == "hover":
+                        helium.hover(helium.Image(value))
+                        status = True
+                elif value_type == "tf":
+                    if action_type == "single":
+                        helium.click(helium.TextField(value))
+                        status = True
+                    elif action_type == "double":
+                        helium.doubleclick(helium.TextField(value))
+                        status = True
+                    elif action_type == "right":
+                        helium.rightclick(helium.TextField(value))
+                        status = True
+                    elif action_type == "hover":
+                        helium.hover(helium.TextField(value))
+                        status = True
+                elif value_type == "cob":
+                    if action_type == "single":
+                        helium.click(helium.ComboBox(value))
+                        status = True
+                    elif action_type == "double":
+                        helium.doubleclick(helium.ComboBox(value))
+                        status = True
+                    elif action_type == "right":
+                        helium.rightclick(helium.ComboBox(value))
+                        status = True
+                    elif action_type == "hover":
+                        helium.hover(helium.ComboBox(value))
+                        status = True
+                elif value_type == "chb":
+                    if action_type == "single":
+                        helium.click(helium.Checkbox(value))
+                        status = True
+                    elif action_type == "double":
+                        helium.doubleclick(helium.Checkbox(value))
+                        status = True
+                    elif action_type == "right":
+                        helium.rightclick(helium.Checkbox(value))
+                        status = True
+                    elif action_type == "hover":
+                        helium.hover(helium.Checkbox(value))
+                        status = True
+                elif value_type == "rb":
+                    if action_type == "single":
+                        helium.click(helium.RadioButton(value))
+                        status = True
+                    elif action_type == "double":
+                        helium.doubleclick(helium.RadioButton(value))
+                        status = True
+                    elif action_type == "right":
+                        helium.rightclick(helium.RadioButton(value))
+                        status = True
+                    elif action_type == "hover":
+                        helium.hover(helium.RadioButton(value))
+                        status = True
                 else:
                     status = False
-        except WebDriverException as e:
-            message = str(e)
-            if "loading status" in message:
-                time.sleep(2)
-                self.mouse(value, action_type, value_type)
+            else:
+                status = False
+        # except WebDriverException as e:
+        #     message = str(e)
+        #     if "loading status" in message:
+        #         time.sleep(2)
+        #         self.mouse(value, action_type, value_type)
 
-        except AttributeError:
-            text_to_speech_error(
-                "Invalid Input for function Mouse Click")
-            # sys.exit()
-        except Exception as ex:
-            status = False
-            report_error(ex)
-            error = ex
-        finally:
-            if error is not None:
-                raise Exception(error)
-            return [status]
+        # except AttributeError:
+        #     text_to_speech_error(
+        #         "Invalid Input for function Mouse Click")
+        #     # sys.exit()
+        # except Exception as ex:
+        #     status = False
+        #     report_error(ex)
+        #     error = ex
+        # finally:
+        #     if error is not None:
+        #         raise Exception(error)
+        #     return [status]
 
     def scroll(self, direction: str = "down", weight=3):
         """
@@ -390,30 +377,30 @@ class ChromeBrowser:
             [status]
             status (bool): Whether the function is successful or failed.
         """
-        status = False
+        # status = False
         error = None
         import helium
         helium.set_driver(self.browser_driver)
         scroll_pixs = int(weight)
-        try:
-            if direction.lower() == "down":
-                helium.scroll_down(scroll_pixs)
-            elif direction.lower() == "up":
-                helium.scroll_up(scroll_pixs)
-            elif direction.lower() == "left":
-                helium.scroll_left(scroll_pixs)
-            elif direction.lower() == "right":
-                helium.scroll_right(scroll_pixs)
+        # try:
+        if direction.lower() == "down":
+            helium.scroll_down(scroll_pixs)
+        elif direction.lower() == "up":
+            helium.scroll_up(scroll_pixs)
+        elif direction.lower() == "left":
+            helium.scroll_left(scroll_pixs)
+        elif direction.lower() == "right":
+            helium.scroll_right(scroll_pixs)
 
-            status = True
-        except Exception as ex:
-            status = False
-            report_error(ex)
-            error = ex
-        finally:
-            if error is not None:
-                raise Exception(error)
-            return [status]
+            # status = True
+        # except Exception as ex:
+        #     status = False
+        #     report_error(ex)
+        #     error = ex
+        # finally:
+        #     if error is not None:
+        #         raise Exception(error)
+        #     return [status]
 
     def key_press(self, key_1: str = "", key_2: str = ""):
         """
@@ -430,40 +417,40 @@ class ChromeBrowser:
             [status]
             status (bool): Whether the function is successful or failed.
         """
-        status = False
+        # status = False
         error = None
 
         import sys
         import helium
         helium.set_driver(self.browser_driver)
 
-        try:
+        # try:
 
-            if not key_1:
-                text_to_speech_error("Please select the text to type")
+        if not key_1:
+            text_to_speech_error("Please select the text to type")
 
-            if key_1 and not key_2:
-                helium.press(key_1)
-            elif key_1 and key_2:
-                helium.press(key_1 + key_2)
+        if key_1 and not key_2:
+            helium.press(key_1)
+        elif key_1 and key_2:
+            helium.press(key_1 + key_2)
 
-            status = True
-        except TimeoutException:
-            print(
-                "Element not found. Please check the given input or change browser_set_waiting_time().")
+        # status = True
+        # except TimeoutException:
+        #     print(
+        #         "Element not found. Please check the given input or change browser_set_waiting_time().")
 
-        except AttributeError:
-            print("Invalid Input for function Key Press")
+        # except AttributeError:
+        #     print("Invalid Input for function Key Press")
 
-            # sys.exit()
-        except Exception as ex:
-            status = False
-            report_error(ex)
-            error = ex
-        finally:
-            if error is not None:
-                raise Exception(error)
-            return [status]
+        #     # sys.exit()
+        # except Exception as ex:
+        #     status = False
+        #     report_error(ex)
+        #     error = ex
+        # finally:
+        #     if error is not None:
+        #         raise Exception(error)
+        #     return [status]
 
     def hit_enter(self):
         """
@@ -477,21 +464,21 @@ class ChromeBrowser:
             [status]
             status (bool): Whether the function is successful or failed.
         """
-        status = False
+        # status = False
         error = None
         import helium
         helium.set_driver(self.browser_driver)
-        try:
-            helium.press(helium.ENTER)
-            status = True
-        except Exception as ex:
-            status = False
-            report_error(ex)
-            error = ex
-        finally:
-            if error is not None:
-                raise Exception(error)
-            return [status]
+        # try:
+        helium.press(helium.ENTER)
+        status = True
+        # except Exception as ex:
+        #     status = False
+        #     report_error(ex)
+        #     error = ex
+        # finally:
+        #     if error is not None:
+        #         raise Exception(error)
+        #     return [status]
 
     def refresh_page(self):
         """
@@ -505,20 +492,20 @@ class ChromeBrowser:
             [status]
             status (bool): Whether the function is successful or failed.
         """
-        status = False
+        # status = False
         error = None
-        try:
-            self.browser_driver.refresh()
-            status = True
-        except Exception as ex:
-            status = False
-            report_error(ex)
-            error = ex
+        # try:
+        self.browser_driver.refresh()
+        status = True
+        # except Exception as ex:
+        #     status = False
+        #     report_error(ex)
+        #     error = ex
 
-        finally:
-            if error is not None:
-                raise Exception(error)
-            return [status]
+        # finally:
+        #     if error is not None:
+        #         raise Exception(error)
+        #     return [status]
 
     def set_waiting_time(self, time: int = 10):
         """
@@ -532,21 +519,21 @@ class ChromeBrowser:
             [status]
             status (bool): Whether the function is successful or failed.
         """
-        status = False
+        # status = False
         error = None
-        try:
-            import helium
-            helium.set_driver(self.browser_driver)
-            helium.Config.implicit_wait_secs = int(time)
-            status = True
-        except Exception as ex:
-            status = False
-            report_error(ex)
-            error = ex
-        finally:
-            if error is not None:
-                raise Exception(error)
-            return [status]
+        # try:
+        import helium
+        helium.set_driver(self.browser_driver)
+        helium.Config.implicit_wait_secs = int(time)
+        #     status = True
+        # except Exception as ex:
+        #     status = False
+        #     report_error(ex)
+        #     error = ex
+        # finally:
+        #     if error is not None:
+        #         raise Exception(error)
+        #     return [status]
 
     def get_text(self, element_xpath: str = ""):
         """
@@ -561,21 +548,22 @@ class ChromeBrowser:
             status (bool): Whether the function is successful or failed.
             data (str): The text of the element.
         """
-        status = False
+        # status = False
         data = None
         error = None
-        try:
-            element = self.browser_driver.find_element_by_xpath(element_xpath)
-            status = True
-            data = element.text
-        except Exception as ex:
-            status = False
-            report_error(ex)
-            error = ex
-        finally:
-            if error is not None:
-                raise Exception(error)
-            return [status, data]
+        # try:
+        element = self.browser_driver.find_element_by_xpath(element_xpath)
+        status = True
+        data = element.text
+        # except Exception as ex:
+        #     status = False
+        #     report_error(ex)
+        #     error = ex
+        # finally:
+        #     if error is not None:
+        #         raise Exception(error)
+        #     return [status, data]
+        return data
 
     def close(self):
         """
@@ -589,20 +577,20 @@ class ChromeBrowser:
             [status]    
             status (bool): Whether the function is successful or failed.
         """
-        status = False
+        # status = False
         error = None
-        try:
-            self.browser_driver.close()
-            self.browser_driver.quit()
-            status = True
-        except Exception as ex:
-            status = False
-            report_error(ex)
-            error = ex
-        finally:
-            if error is not None:
-                raise Exception(error)
-            return [status]
+        # try:
+        self.browser_driver.close()
+        self.browser_driver.quit()
+            # status = True
+        # except Exception as ex:
+        #     status = False
+        #     report_error(ex)
+        #     error = ex
+        # finally:
+        #     if error is not None:
+        #         raise Exception(error)
+        #     return [status]
 
     def __str__(self):
         return f"Chrome Browser with options: {self.options}"
