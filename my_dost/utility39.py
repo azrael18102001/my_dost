@@ -19,24 +19,13 @@ def pause_program(seconds="5"):
 
     # Response section
     error = None
-    status = False
-
-    try:
-        seconds = int(seconds)
-        time.sleep(seconds)
+    
+    
+    seconds = int(seconds)
+    time.sleep(seconds)
 
         # If the function returns a value, it should be assigned to the data variable.
         # data = value
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
-    else:
-        status = True
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status]
 
 
 def api_request(url: str, method='GET', body: dict = None, headers: dict = None):
@@ -58,41 +47,30 @@ def api_request(url: str, method='GET', body: dict = None, headers: dict = None)
 
     # Response section
     error = None
-    status = False
     data = None
 
-    try:
-        if headers is None:
-            headers = {"charset": "utf-8", "Content-Type": "application/json"}
+    if headers is None:
+        headers = {"charset": "utf-8", "Content-Type": "application/json"}
 
-        if method == 'GET':
-            response = requests.get(
-                url, headers=headers, params=body)
-        elif method == 'POST':
-            response = requests.post(
-                url, data=json.dumps(body), headers=json.dumps(headers))
-        elif method == 'PUT':
-            response = requests.put(
-                url, data=json.dumps(body), headers=json.dumps(headers))
-        elif method == 'DELETE':
-            response = requests.delete(
-                url, data=json.dumps(body), headers=json.dumps(headers))
-        else:
-            raise Exception("Invalid method")
-        if response.status_code in [200, 201, 202, 203, 204]:
-            data = response.json()
-        else:
-            raise Exception(response.text)
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
+    if method == 'GET':
+        response = requests.get(
+            url, headers=headers, params=body)
+    elif method == 'POST':
+        response = requests.post(
+            url, data=json.dumps(body), headers=json.dumps(headers))
+    elif method == 'PUT':
+        response = requests.put(
+            url, data=json.dumps(body), headers=json.dumps(headers))
+    elif method == 'DELETE':
+        response = requests.delete(
+            url, data=json.dumps(body), headers=json.dumps(headers))
     else:
-        status = True
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status, data]
+        raise Exception("Invalid method")
+    if response.status_code in [200, 201, 202, 203, 204]:
+        data = response.json()
+    else:
+        raise Exception(response.text)
+    return data
 
 
 # api request todos free api
@@ -117,30 +95,17 @@ def clipboard_set_data(data, format_id=win32clipboard.CF_UNICODETEXT):
 
     # Response section
     error = None
-    status = False
 
     # Logic Section
+    win32clipboard.OpenClipboard()
     try:
-        win32clipboard.OpenClipboard()
-        try:
-            win32clipboard.EmptyClipboard()
-            win32clipboard.SetClipboardData(format_id, data)
-        finally:
-            if error is not None:
-                raise Exception(error)
-            win32clipboard.CloseClipboard()
-
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
-    else:
-        status = True
-
+        win32clipboard.EmptyClipboard()
+        win32clipboard.SetClipboardData(format_id, data)
     finally:
         if error is not None:
             raise Exception(error)
-        return [status]
+        win32clipboard.CloseClipboard()
+
 
 
 def GetClipboardFormats():
@@ -172,28 +137,17 @@ def clipboard_get_data(format_id=win32clipboard.CF_UNICODETEXT):
 
     # Response section
     error = None
-    status = False
     data = None
 
     # Logic Section
-    try:
-        if format_id not in GetClipboardFormats():
-            raise RuntimeError("That format is not available")
-        win32clipboard.OpenClipboard()
-        data = win32clipboard.GetClipboardData(format_id)
-        win32clipboard.CloseClipboard()
 
-    except Exception as ex:
-        report_error(ex)
-        error = ex
+    if format_id not in GetClipboardFormats():
+        raise RuntimeError("That format is not available")
+    win32clipboard.OpenClipboard()
+    data = win32clipboard.GetClipboardData(format_id)
+    win32clipboard.CloseClipboard()
 
-    else:
-        status = True
-
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status, data]
+    return data
 
 
 def clear_output():
@@ -208,50 +162,31 @@ def clear_output():
 
     # Response section
     error = None
-    status = False
 
     # Logic Section
-    try:
-        command = 'clear'
-        if os.name in ('nt', 'dos'):  # If Machine is running on Windows, use cls
-            command = 'cls'
-        os.system(command)
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-    else:
-        status = True
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status]
+    command = 'clear'
+    if os.name in ('nt', 'dos'):  # If Machine is running on Windows, use cls
+        command = 'cls'
+    os.system(command)
 
 
 def install_module(module_name):
-    try:
-        if module_name != "my_dost":
-            import subprocess
-            import sys
-            subprocess.call([sys.executable, "-m", "pip",
-                            "install", module_name])
-    except:
-        raise Exception("Sorry, I could not install the module {}".format(
-            module_name))
+    if module_name != "my_dost":
+        import subprocess
+        import sys
+        subprocess.call([sys.executable, "-m", "pip",
+                        "install", module_name])
 
 
 def uninstall_module(module_name):
-    try:
-        if module_name != "my_dost":
-            import subprocess
-            import sys
-            subprocess.call([sys.executable, "-m", "pip",
-                            "uninstall", "-y", module_name])
-        else:
-            raise Exception(
-                "You cannot uninstall my_dost from here.")
-    except:
-        raise Exception("Sorry, I could not uninstall the module {}".format(
-            module_name))
+    if module_name != "my_dost":
+        import subprocess
+        import sys
+        subprocess.call([sys.executable, "-m", "pip",
+                        "uninstall", "-y", module_name])
+    else:
+        raise Exception(
+            "You cannot uninstall my_dost from here.")
 
 
 def image_to_text(image_path):
@@ -263,21 +198,10 @@ def image_to_text(image_path):
     from my_dost.CrashHandler import report_error
 
     # Response section
-    status = False
     data = None
-    error = None
+    
+    # Logic section
+    image = Image.open(image_path)
+    data = pytesseract.image_to_string(image)
 
-    try:
-        # Logic section
-        image = Image.open(image_path)
-        data = pytesseract.image_to_string(image)
-        status = True
-
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status, data]
+    return data

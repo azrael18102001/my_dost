@@ -19,29 +19,18 @@ def folder_read_text_file(txt_file_path=""):
     # import section
     # Response section
     error = None
-    status = False
     data = None
 
-    try:
-        if not txt_file_path:
-            raise Exception("Text file path is empty")
+    if not txt_file_path:
+        raise Exception("Text file path is empty")
 
-        with open(txt_file_path) as f:
-            file_contents = f.readlines()
-        data = file_contents
+    with open(txt_file_path) as f:
+        file_contents = f.readlines()
+    data = file_contents
 
         # If the function returns a value, it should be assigned to the data variable.
         # data = value
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
-    else:
-        status = True
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status, data]
+    return data
 
 
 def folder_write_text_file(txt_file_path="", contents=""):
@@ -62,33 +51,20 @@ def folder_write_text_file(txt_file_path="", contents=""):
 
     # Response section
     error = None
-    status = False
     data = None
 
-    try:
+    if not txt_file_path:
+        raise Exception("Text file path is empty")
 
-        if not txt_file_path:
-            raise Exception("Text file path is empty")
+    if not contents:
+        raise Exception("Contents is empty")
 
-        if not contents:
-            raise Exception("Contents is empty")
+    f = open(txt_file_path, 'w', encoding="utf-8")
+    f.writelines(str(contents))
+    f.close()
 
-        f = open(txt_file_path, 'w', encoding="utf-8")
-        f.writelines(str(contents))
-        f.close()
-
-        # If the function returns a value, it should be assigned to the data variable.
-        # data = value
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
-    else:
-        status = True
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status]
+    # If the function returns a value, it should be assigned to the data variable.
+    # data = value
 
 
 def folder_create(strFolderPath=""):
@@ -109,28 +85,18 @@ def folder_create(strFolderPath=""):
     import os
     # Response section
     error = None
-    status = False
     data = None
 
-    try:
-        if not strFolderPath:
-            raise Exception("Folder path is empty")
 
-        if not os.path.exists(strFolderPath):
-            os.makedirs(strFolderPath, exist_ok=True)
+    if not strFolderPath:
+        raise Exception("Folder path is empty")
 
-        # If the function returns a value, it should be assigned to the data variable.
-        # data = value
-    except Exception as ex:
-        report_error(ex)
-        error = ex
+    if not os.path.exists(strFolderPath):
+        os.makedirs(strFolderPath, exist_ok=True)
 
-    else:
-        status = True
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status]
+    # If the function returns a value, it should be assigned to the data variable.
+    # data = value
+
 
 
 def folder_create_text_file(textFolderPath="", txtFileName="", custom=False):
@@ -156,42 +122,30 @@ def folder_create_text_file(textFolderPath="", txtFileName="", custom=False):
     from pathlib import Path
     # Response section
     error = None
-    status = False
     data = None
 
-    try:
-        if not textFolderPath:
-            raise Exception("Text file path is empty")
+    if not textFolderPath:
+        raise Exception("Text file path is empty")
 
-        if not txtFileName:
-            raise Exception("Text file name is empty")
+    if not txtFileName:
+        raise Exception("Text file name is empty")
 
-        if not custom:
-            if ".txt" not in txtFileName:
-                txtFileName = txtFileName + ".txt"
+    if not custom:
+        if ".txt" not in txtFileName:
+            txtFileName = txtFileName + ".txt"
 
-        if not os.path.exists(textFolderPath):
-            folder_create(textFolderPath)
+    if not os.path.exists(textFolderPath):
+        folder_create(textFolderPath)
 
-        file_path = os.path.join(textFolderPath, txtFileName)
-        file_path = Path(file_path)
+    file_path = os.path.join(textFolderPath, txtFileName)
+    file_path = Path(file_path)
 
-        f = open(file_path, 'w', encoding="utf-8")
-        f.close()
-        data = file_path
+    f = open(file_path, 'w', encoding="utf-8")
+    f.close()
+    data = file_path
 
         # If the function returns a value, it should be assigned to the data variable.
         # data = value
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
-    else:
-        status = True
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status]
 
 
 def folder_get_all_filenames_as_list(strFolderPath="", extension='all'):
@@ -214,39 +168,28 @@ def folder_get_all_filenames_as_list(strFolderPath="", extension='all'):
     import os
     # Response section
     error = None
-    status = False
     data = None
 
-    try:
-        if not strFolderPath:
-            raise Exception("Folder path is empty")
+    if not strFolderPath:
+        raise Exception("Folder path is empty")
 
-        if extension == "all":
-            allFilesOfaFolderAsLst = [
-                f for f in os.listdir(strFolderPath)]
-
-        else:
-            # check if the extension is given or not
-            if not extension.startswith("."):
-                extension = "." + str(extension)
-
-            allFilesOfaFolderAsLst = [
-                f for f in os.listdir(strFolderPath) if f.endswith(extension)]
-
-        data = allFilesOfaFolderAsLst
-
-        # If the function returns a value, it should be assigned to the data variable.
-        # data = value
-    except Exception as ex:
-        report_error(ex)
-        error = ex
+    if extension == "all":
+        allFilesOfaFolderAsLst = [
+            f for f in os.listdir(strFolderPath)]
 
     else:
-        status = True
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status, data]
+        # check if the extension is given or not
+        if not extension.startswith("."):
+            extension = "." + str(extension)
+
+        allFilesOfaFolderAsLst = [
+            f for f in os.listdir(strFolderPath) if f.endswith(extension)]
+
+    data = allFilesOfaFolderAsLst
+
+    # If the function returns a value, it should be assigned to the data variable.
+    # data = value
+    return data
 
 
 def folder_delete_all_files(fullPathOfTheFolder="", file_extension_without_dot="all", print_status=False):
@@ -270,47 +213,35 @@ def folder_delete_all_files(fullPathOfTheFolder="", file_extension_without_dot="
     from pathlib import Path
     # Response section
     error = None
-    status = False
     # data = None
 
-    try:
-        if not fullPathOfTheFolder:
-            raise Exception("Folder path is empty")
+    if not fullPathOfTheFolder:
+        raise Exception("Folder path is empty")
 
-        count = 0
-        # check if file_extension_without_dot begins
+    count = 0
+    # check if file_extension_without_dot begins
 
-        if not file_extension_without_dot.startswith("."):
-            file_extension_with_dot = "." + str(file_extension_without_dot)
+    if not file_extension_without_dot.startswith("."):
+        file_extension_with_dot = "." + str(file_extension_without_dot)
 
-        if file_extension_with_dot.lower() == ".all":
-            filelist = [f for f in os.listdir(fullPathOfTheFolder)]
-        else:
-            filelist = [f for f in os.listdir(
-                fullPathOfTheFolder) if f.endswith(file_extension_with_dot)]
+    if file_extension_with_dot.lower() == ".all":
+        filelist = [f for f in os.listdir(fullPathOfTheFolder)]
+    else:
+        filelist = [f for f in os.listdir(
+            fullPathOfTheFolder) if f.endswith(file_extension_with_dot)]
 
-        for f in filelist:
-            file_path = os.path.join(fullPathOfTheFolder, f)
-            file_path = Path(file_path)
-            os.remove(file_path)
-            count += 1
+    for f in filelist:
+        file_path = os.path.join(fullPathOfTheFolder, f)
+        file_path = Path(file_path)
+        os.remove(file_path)
+        count += 1
 
-        if print_status:
-            print(filelist)
+    if print_status:
+        print(filelist)
         # data = count
 
         # If the function returns a value, it should be assigned to the data variable.
         # data = value
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
-    else:
-        status = True
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status]
 
 # write a function to delete file or folder
 
@@ -333,44 +264,33 @@ def folder_delete_file_or_folder(file_or_folder_path: str = "", print_status=Fal
     from pathlib import Path
     # Response section
     error = None
-    status = False
     # data = None
 
-    try:
-        if not file_or_folder_path:
-            raise Exception("File or folder path is empty")
 
-        file_or_folder_path = Path(file_or_folder_path)
+    if not file_or_folder_path:
+        raise Exception("File or folder path is empty")
 
-        # check if the file or folder exists
-        if file_or_folder_path.exists():
+    file_or_folder_path = Path(file_or_folder_path)
 
-            # check if path is a file
-            if file_or_folder_path.is_file():
-                os.remove(file_or_folder_path)
-            elif file_or_folder_path.is_dir():
-                import os
-                import shutil
-                shutil.rmtree(file_or_folder_path)
+    # check if the file or folder exists
+    if file_or_folder_path.exists():
 
-            if print_status:
-                print("File or folder deleted successfully")
-        else:
-            raise Exception("File or folder does not exist")
+        # check if path is a file
+        if file_or_folder_path.is_file():
+            os.remove(file_or_folder_path)
+        elif file_or_folder_path.is_dir():
+            import os
+            import shutil
+            shutil.rmtree(file_or_folder_path)
+
+        if print_status:
+            print("File or folder deleted successfully")
+    else:
+        raise Exception("File or folder does not exist")
         # data = count
 
         # If the function returns a value, it should be assigned to the data variable.
         # data = value
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
-    else:
-        status = True
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status]
 
 # if __name__ == "__main__":
 #     folder_delete_file_or_folder(r"C:\Users\mrmay\OneDrive\Desktop\Del Me")
@@ -397,42 +317,30 @@ def file_rename(old_file_path='', new_file_name='', print_status=False):
     from pathlib import Path
     # Response section
     error = None
-    status = False
     data = None
 
-    try:
-        if not old_file_path:
-            raise Exception("Old file path is empty")
+    if not old_file_path:
+        raise Exception("Old file path is empty")
 
-        if not new_file_name:
-            raise Exception("New file name is empty")
+    if not new_file_name:
+        raise Exception("New file name is empty")
 
-        if os.path.exists(old_file_path):
-            if new_file_name:
-                ext = old_file_path.split('\\')[-1].split('.')[-1]
-                path_of_new_file = os.path.join('\\'.join(old_file_path.split('\\')[
-                                                :-1]), '.'.join([new_file_name, ext]))
+    if os.path.exists(old_file_path):
+        if new_file_name:
+            ext = old_file_path.split('\\')[-1].split('.')[-1]
+            path_of_new_file = os.path.join('\\'.join(old_file_path.split('\\')[
+                                            :-1]), '.'.join([new_file_name, ext]))
 
-                os.rename(src=Path(old_file_path),
-                          dst=Path(path_of_new_file))
-                if print_status:
-                    print("File renamed successfully")
-                    print(path_of_new_file)
-            else:
-                raise Exception('new_file_name can\'t be empty.')
+            os.rename(src=Path(old_file_path),
+                        dst=Path(path_of_new_file))
+            if print_status:
+                print("File renamed successfully")
+                print(path_of_new_file)
         else:
-            raise Exception(
-                'Old_file_path is invalid. Please pass a valid path.')
-
-        # If the function returns a value, it should be assigned to the data variable.
-        # data = value
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
+            raise Exception('new_file_name can\'t be empty.')
     else:
-        status = True
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status]
+        raise Exception(
+            'Old_file_path is invalid. Please pass a valid path.')
+
+    # If the function returns a value, it should be assigned to the data variable.
+    # data = value

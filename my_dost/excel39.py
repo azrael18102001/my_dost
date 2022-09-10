@@ -27,35 +27,22 @@ def authenticate_google_spreadsheet(credential_file_path=""):
 
     # Response section
     error = None
-    status = False
+    # status = False
     data = None
 
     # Logic section
-    try:
-        if not credential_file_path:
-            raise Exception("credential (json) file path cannot be empty")
+    if not credential_file_path:
+        raise Exception("credential (json) file path cannot be empty")
 
-        scope = ["https://spreadsheets.google.com/feeds", 'https://www.googleapis.com/auth/spreadsheets',
-                 "https://www.googleapis.com/auth/drive.file", "https://www.googleapis.com/auth/drive"]
+    scope = ["https://spreadsheets.google.com/feeds", 'https://www.googleapis.com/auth/spreadsheets',
+                "https://www.googleapis.com/auth/drive.file", "https://www.googleapis.com/auth/drive"]
 
-        creds = ServiceAccountCredentials.from_json_keyfile_name(
-            credential_file_path, scope)
+    creds = ServiceAccountCredentials.from_json_keyfile_name(
+        credential_file_path, scope)
 
-        gc = gspread.authorize(creds)
+    gc = gspread.authorize(creds)
 
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
-    else:
-        status = True
-        # # If the function returns a value, it should be assigned to the data variable.
-        data = gc
-
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status, data]
+    return data
 
 
 def excel_get_dataframe_from_google_spreadsheet(auth, spreadsheet_url="", sheet_name="Sheet1"):
@@ -79,55 +66,46 @@ def excel_get_dataframe_from_google_spreadsheet(auth, spreadsheet_url="", sheet_
 
     # Response section
     error = None
-    status = False
+    # status = False
     data = None
     # Logic section
 
-    try:
-        if not auth:
-            raise Exception(
-                "Please call authenticate_google_spreadsheet function to get auth")
+    if not auth:
+        raise Exception(
+            "Please call authenticate_google_spreadsheet function to get auth")
 
-        if not spreadsheet_url:
-            raise Exception("spreadsheet url cannot be empty")
+    if not spreadsheet_url:
+        raise Exception("spreadsheet url cannot be empty")
 
-        sh = auth.open_by_url(url=spreadsheet_url)
+    sh = auth.open_by_url(url=spreadsheet_url)
 
-        # get all the worksheets from sh
-        worksheet_list = sh.worksheets()
+    # get all the worksheets from sh
+    worksheet_list = sh.worksheets()
 
-        # check if sheet_name is already present in worksheet_list
-        sheet_present = False
-        for worksheet in worksheet_list:
-            if worksheet.title == sheet_name:
-                sheet_present = True
-                break
+    # check if sheet_name is already present in worksheet_list
+    sheet_present = False
+    for worksheet in worksheet_list:
+        if worksheet.title == sheet_name:
+            sheet_present = True
+            break
 
-        if not sheet_present:
-            raise Exception("Sheet name not found")
-        else:
-            worksheet = sh.worksheet(sheet_name)
-
-        data_frame = pd.DataFrame(worksheet.get_all_records())
-
-    except Exception as ex:
-        # check if it is a permission error
-        if 'PERMISSION_DENIED' in str(ex):
-            raise Exception(
-                "Permission Denied. Please share the spreadsheet with client email as per Credential JSON File")
-        else:
-            report_error(ex)
-            error = ex
-
+    if not sheet_present:
+        raise Exception("Sheet name not found")
     else:
-        status = True
-        data = data_frame
-        # # If the function returns a value, it should be assigned to the data variable.
+        worksheet = sh.worksheet(sheet_name)
 
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status, data]
+    data_frame = pd.DataFrame(worksheet.get_all_records())
+
+    # except Exception as ex:
+    #     # check if it is a permission error
+    #     if 'PERMISSION_DENIED' in str(ex):
+    #         raise Exception(
+    #             "Permission Denied. Please share the spreadsheet with client email as per Credential JSON File")
+    #     else:
+    #         report_error(ex)
+    #         error = ex
+
+    # return data
 
 
 def excel_tabular_data_from_website(website_url="", table_number=""):
@@ -150,39 +128,29 @@ def excel_tabular_data_from_website(website_url="", table_number=""):
 
     # Response Section
     error = None
-    status = False
+    # status = False
     data = None
 
     # Logic Section
-    try:
-        if not website_url:
-            raise Exception("Website URL cannot be empty")
+    
+    if not website_url:
+        raise Exception("Website URL cannot be empty")
 
-        all_tables = pd.read_html(website_url)
+    all_tables = pd.read_html(website_url)
 
-        if not table_number:
-            data = all_tables
-        else:
-            if table_number > len(all_tables):
-                raise Exception(
-                    "Table number cannot be greater than number of tables")
-
-            if table_number < 1:
-                raise Exception("Table number cannot be less than 1")
-
-            data = all_tables[table_number - 1]
-
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
+    if not table_number:
+        data = all_tables
     else:
-        status = True
+        if table_number > len(all_tables):
+            raise Exception(
+                "Table number cannot be greater than number of tables")
 
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status, data]
+        if table_number < 1:
+            raise Exception("Table number cannot be less than 1")
+
+        data = all_tables[table_number - 1]
+
+    return data
 
 # [status, data]
 # browser_get_html_tabular_data_from_website(website_url="https://en.wikipedia.org/wiki/List_of_footballers_with_500_or_more_goals",output_folder=r"C:\Users\mrmay\OneDrive\Desktop\Misc")
@@ -212,65 +180,64 @@ def excel_upload_dataframe_to_google_spreadsheet(auth, spreadsheet_url="", sheet
 
     # Response section
     error = None
-    status = False
+    # status = False
 
     # Logic section
 
-    try:
-        if not auth:
-            raise Exception(
-                "Please call authenticate_google_spreadsheet function to get auth")
+    if not auth:
+        raise Exception(
+            "Please call authenticate_google_spreadsheet function to get auth")
 
-        if not spreadsheet_url:
-            raise Exception("spreadsheet url cannot be empty")
+    if not spreadsheet_url:
+        raise Exception("spreadsheet url cannot be empty")
 
-        if not isinstance(df, pd.DataFrame):
-            raise Exception("dataframe must be a pandas dataframe")
+    if not isinstance(df, pd.DataFrame):
+        raise Exception("dataframe must be a pandas dataframe")
 
-        sh = auth.open_by_url(url=spreadsheet_url)
+    sh = auth.open_by_url(url=spreadsheet_url)
 
-        # get all the worksheets from sh
-        worksheet_list = sh.worksheets()
+    # get all the worksheets from sh
+    worksheet_list = sh.worksheets()
 
-        # check if sheet_name is already present in worksheet_list
-        sheet_present = False
-        for worksheet in worksheet_list:
-            if worksheet.title == sheet_name:
-                sheet_present = True
-                break
+    # check if sheet_name is already present in worksheet_list
+    sheet_present = False
+    for worksheet in worksheet_list:
+        if worksheet.title == sheet_name:
+            sheet_present = True
+            break
 
-        if sheet_present:
-            # append df to existing sheet
-            worksheet = sh.worksheet(sheet_name)
-            row_count = worksheet.get_all_values().__len__()
+    if sheet_present:
+        # append df to existing sheet
+        worksheet = sh.worksheet(sheet_name)
+        row_count = worksheet.get_all_values().__len__()
 
-            if row_count == 0:
-                set_with_dataframe(worksheet, dataframe=df)
-            else:
-                set_with_dataframe(worksheet, dataframe=df,
-                                   row=row_count + 1, include_column_header=False)
-
+        if row_count == 0:
+            set_with_dataframe(worksheet, dataframe=df)
         else:
-            worksheet = sh.add_worksheet(
-                title=sheet_name, rows="999", cols="26")
-            set_with_dataframe(worksheet, df)
-
-    except Exception as ex:
-        # check if it is a permission error
-        if 'PERMISSION_DENIED' in str(ex):
-            raise Exception(
-                "Permission Denied. Please share the spreadsheet with client email as per Credential JSON File")
-        else:
-            report_error(ex)
-            error = ex
+            set_with_dataframe(worksheet, dataframe=df,
+                                row=row_count + 1, include_column_header=False)
 
     else:
-        status = True
-        # # If the function returns a value, it should be assigned to the data variable.
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status]
+        worksheet = sh.add_worksheet(
+            title=sheet_name, rows="999", cols="26")
+        set_with_dataframe(worksheet, df)
+
+    # except Exception as ex:
+    #     # check if it is a permission error
+    #     if 'PERMISSION_DENIED' in str(ex):
+    #         raise Exception(
+    #             "Permission Denied. Please share the spreadsheet with client email as per Credential JSON File")
+    #     else:
+    #         report_error(ex)
+    #         error = ex
+
+    # else:
+    #     status = True
+    #     # # If the function returns a value, it should be assigned to the data variable.
+    # finally:
+    #     if error is not None:
+    #         raise Exception(error)
+    #     return [status]
 
 # status, auth = authenticate_google_spreadsheet(r"C:\Users\mrmay\OneDrive\Desktop\Brainly-ML-Project\mayur-pybots-valued-door-353312-0a3451b27ef8.json")
 # # status, df =excel_get_dataframe_from_google_spreadsheet(auth,"https://docs.google.com/spreadsheets/d/1CeF1NuAVLJMEBWQIT2nKceeVM9xjgxhqbNdjPBVurqw/edit#gid=0","Sheet1")
@@ -305,42 +272,30 @@ def excel_create_file(output_folder="", output_filename="", output_sheetname="Sh
 
     # Response section
     error = None
-    status = False
+    # status = False
 
     # Logic section
-    try:
-        if not output_folder:
-            raise Exception("Excel File name cannot be empty")
+    if not output_folder:
+        raise Exception("Excel File name cannot be empty")
 
-        if not output_filename:
-            raise Exception("Excel File Name cannot be empty")
+    if not output_filename:
+        raise Exception("Excel File Name cannot be empty")
 
-        if not os.path.exists(output_folder):
-            output_folder = output_folder_path
+    if not os.path.exists(output_folder):
+        output_folder = output_folder_path
 
-        if ".xlsx" not in output_filename:
-            output_filename = os.path.join(output_folder, str(
-                Path(output_filename).stem) + ".xlsx")
-        else:
-            output_filename = os.path.join(output_folder, output_filename)
-
-        wb = Workbook()
-        ws = wb.active
-        ws.title = output_sheetname
-
-        wb.save(filename=output_filename)
-
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
+    if ".xlsx" not in output_filename:
+        output_filename = os.path.join(output_folder, str(
+            Path(output_filename).stem) + ".xlsx")
     else:
-        status = True
+        output_filename = os.path.join(output_folder, output_filename)
 
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status]
+    wb = Workbook()
+    ws = wb.active
+    ws.title = output_sheetname
+
+    wb.save(filename=output_filename)
+
 # [status]
 
 
@@ -364,31 +319,24 @@ def valid_data(input_filepath, input_sheetname: str = "", validate_filepath=True
     from openpyxl import load_workbook
     from my_dost.CrashHandler import report_error
 
-    try:
-        input_filepath = str(input_filepath)
-        input_sheetname = str(input_sheetname)
-        if validate_filepath:
-            if not ".xlsx" in input_filepath:
+    input_filepath = str(input_filepath)
+    input_sheetname = str(input_sheetname)
+    if validate_filepath:
+        if not ".xlsx" in input_filepath:
+            raise Exception(
+                "Please provide the excel file name with .xlsx extension")
+            return False
+        if not os.path.exists(input_filepath):
+            raise Exception(
+                "Please provide the excel file name with correct path")
+            return False
+        if validate_sheetname:
+            wb = load_workbook(input_filepath)
+            sheet_names = wb.sheetnames
+            if input_sheetname not in sheet_names:
                 raise Exception(
-                    "Please provide the excel file name with .xlsx extension")
-                return False
-            if not os.path.exists(input_filepath):
-                raise Exception(
-                    "Please provide the excel file name with correct path")
-                return False
-            if validate_sheetname:
-                wb = load_workbook(input_filepath)
-                sheet_names = wb.sheetnames
-                if input_sheetname not in sheet_names:
-                    raise Exception(
-                        "Please provide the correct sheet name")
-                    print('Available Sheet Names', sheet_names)
-                    return False
-        return True
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-        return False
+                    "Please provide the correct sheet name")
+                print('Available Sheet Names', sheet_names)
 
 
 def excel_to_dataframe(input_filepath="", input_sheetname="Sheet1", header=1):
@@ -411,34 +359,25 @@ def excel_to_dataframe(input_filepath="", input_sheetname="Sheet1", header=1):
 
     # Response section
     error = None
-    status = False
+    # status = False
     data = None
 
-    try:
-        if not input_filepath:
-            raise Exception("Please provide the excel path")
-        if not input_sheetname:
-            raise Exception("Please provide the sheet name")
 
-        if not valid_data(input_filepath, input_sheetname):
-            return [status]
+    if not input_filepath:
+        raise Exception("Please provide the excel path")
+    if not input_sheetname:
+        raise Exception("Please provide the sheet name")
 
-        if header > 0:
-            data = pd.read_excel(
-                input_filepath, sheet_name=input_sheetname, header=header-1, engine='openpyxl')
+    if not valid_data(input_filepath, input_sheetname):
+        return [status]
 
-        # If the function returns a value, it should be assigned to the data variable.
-        # data = value
-    except Exception as ex:
-        report_error(ex)
-        error = ex
+    if header > 0:
+        data = pd.read_excel(
+            input_filepath, sheet_name=input_sheetname, header=header-1, engine='openpyxl')
 
-    else:
-        status = True
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status, data]
+    # If the function returns a value, it should be assigned to the data variable.
+    # data = value
+    return data
 # df = excel_to_dataframe(r"C:\Users\mrmay\OneDrive\Desktop\MMV.xlsx")
 # print(df, "df")
 
@@ -466,30 +405,20 @@ def excel_get_row_column_count(df):
 
     # Response section
     error = None
-    status = False
+    # status = False
     data = None
 
-    try:
-        if not isinstance(df, pd.DataFrame):
-            raise Exception("Please provide the dataframe")
+    
+    if not isinstance(df, pd.DataFrame):
+        raise Exception("Please provide the dataframe")
 
-        row, col = df.shape
-        row = row + 1
-        data = [row, col]
+    row, col = df.shape
+    row = row + 1
+    data = [row, col]
 
-        # If the function returns a value, it should be assigned to the data variable.
-        # data = value
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
-    else:
-        status = True
-
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status, data]
+    # If the function returns a value, it should be assigned to the data variable.
+    # data = value
+    return data
 # [status, data]
 # data = [row, col]
 
@@ -518,58 +447,47 @@ def dataframe_to_excel(df, output_folder="", output_filename="", output_sheetnam
 
     # Response section
     error = None
-    status = False
+    # status = False
 
-    try:
-        if not output_folder:
-            output_folder = output_folder_path
-        if not output_filename:
-            output_filename = "excel_file"
+    if not output_folder:
+        output_folder = output_folder_path
+    if not output_filename:
+        output_filename = "excel_file"
 
-        if not os.path.exists(output_folder):
-            output_folder = output_folder_path
+    if not os.path.exists(output_folder):
+        output_folder = output_folder_path
 
-        if ".xlsx" not in output_filename:
-            output_filepath = os.path.join(output_folder, str(
-                Path(output_filename).stem) + ".xlsx")
-        else:
-            output_filepath = os.path.join(output_folder, str(
-                output_filename))
+    if ".xlsx" not in output_filename:
+        output_filepath = os.path.join(output_folder, str(
+            Path(output_filename).stem) + ".xlsx")
+    else:
+        output_filepath = os.path.join(output_folder, str(
+            output_filename))
 
-        if not output_sheetname:
-            raise Exception("Please provide the sheet name")
+    if not output_sheetname:
+        raise Exception("Please provide the sheet name")
 
-        if not isinstance(df, pd.DataFrame):
-            raise Exception("Please provide the dataframe")
+    if not isinstance(df, pd.DataFrame):
+        raise Exception("Please provide the dataframe")
 
-        new_file = False
-        if not os.path.exists(output_filepath):
-            # excel_create_file(output_folder, output_filename)
-            new_file = True
+    new_file = False
+    if not os.path.exists(output_filepath):
+        # excel_create_file(output_folder, output_filename)
+        new_file = True
 
-        if mode == 'a' and not new_file:
-            with pd.ExcelWriter(output_filepath, mode="a", engine="openpyxl", if_sheet_exists="overlay",) as writer:
-                current_df = excel_to_dataframe(
-                    output_filepath, output_sheetname)[1]
-                row_count = excel_get_row_column_count(current_df)[1]
-                df.to_excel(writer, sheet_name=output_sheetname,
-                            index=False, startrow=int(row_count[0]), header=False)
-        else:
-            with pd.ExcelWriter(output_filepath, engine="openpyxl",) as writer:
-                df.to_excel(writer, sheet_name=output_sheetname, index=False)
+    if mode == 'a' and not new_file:
+        with pd.ExcelWriter(output_filepath, mode="a", engine="openpyxl", if_sheet_exists="overlay",) as writer:
+            current_df = excel_to_dataframe(
+                output_filepath, output_sheetname)[1]
+            row_count = excel_get_row_column_count(current_df)[1]
+            df.to_excel(writer, sheet_name=output_sheetname,
+                        index=False, startrow=int(row_count[0]), header=False)
+    else:
+        with pd.ExcelWriter(output_filepath, engine="openpyxl",) as writer:
+            df.to_excel(writer, sheet_name=output_sheetname, index=False)
 
         # If the function returns a value, it should be assigned to the data variable.
         # data = value
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
-    else:
-        status = True
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status]
 
 # if __name__ == "__main__":
 #     import pandas as pd
@@ -603,32 +521,22 @@ def excel_set_single_cell(df, column_name="", cell_number=1, text=""):
     # status = False
     data = None
 
-    try:
-        if not isinstance(df, pd.DataFrame):
-            raise Exception("Please provide the dataframe")
+    if not isinstance(df, pd.DataFrame):
+        raise Exception("Please provide the dataframe")
 
-        if not column_name:
-            raise Exception("Please provide the column name")
+    if not column_name:
+        raise Exception("Please provide the column name")
 
-        if not text:
-            raise Exception("Please provide the text to be set")
+    if not text:
+        raise Exception("Please provide the text to be set")
 
-        if cell_number < 1:
-            raise Exception("Please provide the valid cell number")
+    if cell_number < 1:
+        raise Exception("Please provide the valid cell number")
 
-        df.at[cell_number-1, column_name] = text
-        data = df
+    df.at[cell_number-1, column_name] = text
+    data = df
 
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
-    # else:
-    #     status = True
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [data]
+    return data
 # [status, data]
 # data is a dataframe object
 
@@ -664,33 +572,23 @@ def excel_get_single_cell(df, header=1, column_name="", cell_number=1):
     # status = False
     data = None
 
-    try:
-        if not isinstance(df, pd.DataFrame):
-            raise Exception("Please provide the dataframe")
+    if not isinstance(df, pd.DataFrame):
+        raise Exception("Please provide the dataframe")
 
-        if not column_name:
-            raise Exception("Please provide the column name")
+    if not column_name:
+        raise Exception("Please provide the column name")
 
-        if not isinstance(column_name, list):
-            column_name = [column_name]
+    if not isinstance(column_name, list):
+        column_name = [column_name]
 
-        if cell_number < 1:
-            raise Exception("Please provide the valid cell number")
+    if cell_number < 1:
+        raise Exception("Please provide the valid cell number")
 
-        data = df.at[cell_number-header-1, column_name[0]]
+    data = df.at[cell_number-header-1, column_name[0]]
 
         # If the function returns a value, it should be assigned to the data variable.
         # data = value
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
-    # else:
-    #     status = True
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [data]
+    return data
 # [status, data]
 # data = 'text'
 # df = excel_to_dataframe(r"C:\Users\mrmay\OneDrive\Desktop\MMV-1.xlsx", "Sheet1")[1]
@@ -720,27 +618,17 @@ def excel_get_all_header_columns(df):
     from my_dost.CrashHandler import report_error
     # Response section
     error = None
-    status = False
+    # status = False
     data = None
 
-    try:
-        if not isinstance(df, pd.DataFrame):
-            raise Exception("Please provide the dataframe")
+    if not isinstance(df, pd.DataFrame):
+        raise Exception("Please provide the dataframe")
 
-        data = df.columns.values.tolist()
+    data = df.columns.values.tolist()
 
         # If the function returns a value, it should be assigned to the data variable.
         # data = value
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
-    else:
-        status = True
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status, data]
+    return data
 # [status, data]
 # data = ['Header1', 'Header2', 'Header3']
 # print(excel_get_all_header_columns(r"C:\Users\PyBots\Desktop\dummy.xlsx"))
@@ -770,28 +658,17 @@ def excel_get_all_sheet_names(input_filepath=""):
     status = False
     data = None
 
-    try:
-        if not input_filepath:
-            raise Exception("Please provide the excel path")
-        if not valid_data(input_filepath, validate_sheetname=False):
-            return [status]
+    if not input_filepath:
+        raise Exception("Please provide the excel path")
+    if not valid_data(input_filepath, validate_sheetname=False):
+        raise Exception("Please provide the valid excel path")
 
-        wb = load_workbook(input_filepath)
-        data = wb.sheetnames
+    wb = load_workbook(input_filepath)
+    data = wb.sheetnames
 
         # If the function returns a value, it should be assigned to the data variable.
         # data = value
-    except Exception as ex:
-        # except Exception as ex:
-        report_error(ex)
-        error = ex
-
-    else:
-        status = True
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status, data]
+    return data
 # [status, data]
 # data = [sheet_name1, sheet_name2, sheet_name3]
 # print(excel_get_all_sheet_names(r"C:\Users\PyBots\Desktop\dummy.xlsx"))
@@ -822,34 +699,23 @@ def excel_drop_columns(df, cols=""):
 
     # Response section
     error = None
-    status = False
+    # status = False
 
-    try:
-        if not isinstance(df, pd.DataFrame):
-            raise Exception("Please provide the dataframe")
+    if not isinstance(df, pd.DataFrame):
+        raise Exception("Please provide the dataframe")
 
-        if not cols:
-            raise Exception(
-                "Please provide the column name to be dropped.")
+    if not cols:
+        raise Exception(
+            "Please provide the column name to be dropped.")
 
-        if not isinstance(cols, list):
-            cols = [cols]
+    if not isinstance(cols, list):
+        cols = [cols]
 
-        df.drop(cols, axis=1, inplace=True)
+    df.drop(cols, axis=1, inplace=True)
 
         # If the function returns a value, it should be assigned to the data variable.
         # data = value
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
-    else:
-        status = True
-
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status, df]
+    return df
 # [status, data]
 # data is the dataframe after dropping the columns.
 
@@ -880,27 +746,17 @@ def excel_clear_sheet(df):
     status = False
     data = None
 
-    try:
-        if not isinstance(df, pd.DataFrame):
-            raise Exception("Please provide the dataframe")
+    if not isinstance(df, pd.DataFrame):
+        raise Exception("Please provide the dataframe")
 
-        # Clears the contents of the sheet
-        df.drop(df.index, inplace=True)
+    # Clears the contents of the sheet
+    df.drop(df.index, inplace=True)
 
-        data = df
+    data = df
 
         # If the function returns a value, it should be assigned to the data variable.
         # data = value
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
-    else:
-        status = True
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status, data]
+    return data
 # [status, data]
 # data is the dataframe after clearing the sheet.
 
@@ -933,33 +789,22 @@ def excel_remove_duplicates(df, column_name=""):
     data = None
     which_one_to_keep = "first"
 
-    try:
-        if not isinstance(df, pd.DataFrame):
-            raise Exception("Please provide the dataframe")
+    if not isinstance(df, pd.DataFrame):
+        raise Exception("Please provide the dataframe")
 
-        if not column_name:
-            df.drop_duplicates(keep=which_one_to_keep, inplace=True)
-
-        else:
-            if not isinstance(column_name, list):
-                column_name = [column_name]
-            df.drop_duplicates(subset=column_name,
-                               keep=which_one_to_keep, inplace=True)
-
-        data = df
-        # If the function returns a value, it should be assigned to the data variable.
-        # data = value
-    except Exception as ex:
-        report_error(ex)
-        error = ex
+    if not column_name:
+        df.drop_duplicates(keep=which_one_to_keep, inplace=True)
 
     else:
-        status = True
+        if not isinstance(column_name, list):
+            column_name = [column_name]
+        df.drop_duplicates(subset=column_name,
+                            keep=which_one_to_keep, inplace=True)
 
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status, data]
+    data = df
+        # If the function returns a value, it should be assigned to the data variable.
+        # data = value
+    return data
 # [status, data]
 # data is the dataframe after removing the duplicates.
 # print(excel_remove_duplicates(
@@ -987,25 +832,13 @@ def isNaN(value=""):
 
     # Response section
     error = None
-    status = False
+    # status = False
 
-    try:
-        if not value:
-            raise Exception(
-                "Value is empty. Please give a value to check.")
-        import math
-        status = math.isnan(float(value))
-
-        # If the function returns a value, it should be assigned to the data variable.
-        # data = value
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status]
+    if not value:
+        raise Exception(
+            "Value is empty. Please give a value to check.")
+    import math
+    status = math.isnan(float(value))
 # [status]
 
 
@@ -1031,27 +864,16 @@ def df_from_list(list_of_lists, column_names=None):
     # status = False
     data = None
     # Logic section
-    try:
-        if not isinstance(list_of_lists, list):
-            raise Exception("Please pass input as list of lists")
+    if not isinstance(list_of_lists, list):
+        raise Exception("Please pass input as list of lists")
 
-        if isinstance(list_of_lists, list):
-            if column_names == None:
-                data = pd.DataFrame(list_of_lists)
-            else:
-                data = pd.DataFrame(list_of_lists, columns=column_names)
+    if isinstance(list_of_lists, list):
+        if column_names == None:
+            data = pd.DataFrame(list_of_lists)
+        else:
+            data = pd.DataFrame(list_of_lists, columns=column_names)
 
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
-    # else:
-    #     status = True
-
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [data]
+    return data
 # [data]
 # print(df_from_list([[1,2,3],[4,5,6],[7,8,9]],column_names=['a','b','c']))
 # s, df1=df_from_list([[1,2,3],[4,5,6],[7,8,9]])
@@ -1084,30 +906,19 @@ def df_from_string(df_string: str, word_delimeter=" ", line_delimeter="\n", colu
     # status = False
     data = None
     # Logic section
-    try:
-        if not df_string:
-            raise Exception("Please pass input as string")
+    if not df_string:
+        raise Exception("Please pass input as string")
 
-        if not isinstance(df_string, str):
-            df_string = str(df_string)
+    if not isinstance(df_string, str):
+        df_string = str(df_string)
 
-        if column_names == None:
-            data = pd.DataFrame([x.split(word_delimeter)
-                                for x in df_string.split(line_delimeter)])
-        elif isinstance(column_names, list):
-            data = pd.DataFrame([x.split(word_delimeter) for x in df_string.split(
-                line_delimeter)], columns=column_names)
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
-    # else:
-    #     status = True
-
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [data]
+    if column_names == None:
+        data = pd.DataFrame([x.split(word_delimeter)
+                            for x in df_string.split(line_delimeter)])
+    elif isinstance(column_names, list):
+        data = pd.DataFrame([x.split(word_delimeter) for x in df_string.split(
+            line_delimeter)], columns=column_names)
+    return data
 # [data]
 # print(df_from_string('1 2 3\n4 5 6\n7 8 9', word_delimeter=" ", line_delimeter="\n"))
 # print(df_from_string('1\t2\t3\r\n4\t5\t6\r\n7\t8\t9', word_delimeter="\t", line_delimeter="\r\n",column_names=['a','b','c']))
@@ -1138,24 +949,14 @@ def df_extract_sub_df(df, row_start: int, row_end: int, column_start: int, colum
     # status = False
     data = None
     # Logic section
-    try:
-        if df.empty:
-            raise Exception("Dataframe cannot be empty")
+    # try:
+    if df.empty:
+        raise Exception("Dataframe cannot be empty")
 
-        if isinstance(df, pd.DataFrame):
-            data = df.iloc[row_start:row_end, column_start:column_end]
+    if isinstance(df, pd.DataFrame):
+        data = df.iloc[row_start:row_end, column_start:column_end]
 
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
-    # else:
-    #     status = True
-
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [data]
+    return data
 # [status, data]
 # df_main = df_from_list([[1,2,3,4,5],[6,7,8,9,10],[11,12,13,14,15],[16,17,18,19,20]],column_names=['a','b','c','d','e'])
 # print(df_main,"\n")
@@ -1188,33 +989,33 @@ def set_value_in_df(df, row_number: int, column_number: int, value):
     # status = False
     data = None
     # Logic section
-    try:
-        if df.empty:
-            raise Exception("Dataframe cannot be empty")
+    # try:
+    if df.empty:
+        raise Exception("Dataframe cannot be empty")
 
-        # print(type(df))
-        if isinstance(df, pd.DataFrame):
-            if row_number < 1 or column_number < 1:
-                raise Exception(
-                    "Row and column number should be greater than 0")
+    # print(type(df))
+    if isinstance(df, pd.DataFrame):
+        if row_number < 1 or column_number < 1:
+            raise Exception(
+                "Row and column number should be greater than 0")
 
-            if row_number > df.shape[0] or column_number > df.shape[1]:
-                raise Exception(
-                    "Row and column number should be less than or equal to dataframe shape")
+        if row_number > df.shape[0] or column_number > df.shape[1]:
+            raise Exception(
+                "Row and column number should be less than or equal to dataframe shape")
 
-            df.iloc[row_number-1, column_number-1] = value
+        df.iloc[row_number-1, column_number-1] = value
 
-    except Exception as ex:
-        report_error(ex)
-        error = ex
+    # except Exception as ex:
+    #     report_error(ex)
+    #     error = ex
 
-    # else:
-    #     status = True
+    # # else:
+    # #     status = True
 
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [df]
+    # finally:
+    #     if error is not None:
+    #         raise Exception(error)
+        return df
 # [status, data]
 # df1 = df_from_list([[1,2,3,4,5],[6,7,8,9,10],[11,12,13,14,15],[16,17,18,19,20]],column_names=['a','b','c','d','e'])
 # print(df1)
@@ -1247,32 +1048,21 @@ def get_value_in_df(df, row_number: int, column_number: int):
     data = None
 
     # Logic section
-    try:
-        if df.empty:
-            raise Exception("Dataframe cannot be empty")
+    if df.empty:
+        raise Exception("Dataframe cannot be empty")
 
-        if isinstance(df, pd.DataFrame):
-            if row_number < 1 or column_number < 1:
-                raise Exception(
-                    "Row and column number should be greater than 0")
+    if isinstance(df, pd.DataFrame):
+        if row_number < 1 or column_number < 1:
+            raise Exception(
+                "Row and column number should be greater than 0")
 
-            if row_number > df.shape[0] or column_number > df.shape[1]:
-                raise Exception(
-                    "Row and column number should be less than or equal to dataframe shape")
+        if row_number > df.shape[0] or column_number > df.shape[1]:
+            raise Exception(
+                "Row and column number should be less than or equal to dataframe shape")
 
-            data = df.iloc[row_number-1, column_number-1]
+        data = df.iloc[row_number-1, column_number-1]
 
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
-    # else:
-    #     status = True
-
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [data]
+    return data
 # [status, data]
 
 # create a function to merge all sheets of an excel
@@ -1301,26 +1091,18 @@ def df_drop_rows(df, row_start: int, row_end: int):
     # status = False
     data = None
     # Logic section
-    try:
-        if df.empty:
-            raise Exception("Dataframe cannot be empty")
+    if df.empty:
+        raise Exception("Dataframe cannot be empty")
 
-        if isinstance(df, pd.DataFrame):
-            # -1 because index starts from 0
-            data = df.drop(df.index[row_start-1:row_end])
+    if isinstance(df, pd.DataFrame):
+        # -1 because index starts from 0
+        data = df.drop(df.index[row_start-1:row_end])
 
-    except Exception as ex:
-        # report_error(ex)
-        error = ex
-        print(ex)
 
     # else:
     #     status = True
 
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [data]
+    return data
 
 # if __name__ == "__main__":
 #     status, df = excel_to_dataframe(r"C:\Users\mrmay\OneDrive\Desktop\MMV.xlsx",input_sheetname="Sheet3")

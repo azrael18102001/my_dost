@@ -29,51 +29,34 @@ def mouse_click(x='', y='', left_or_right="left", no_of_clicks=1, type_of_moveme
 
     # Response section
     error = None
-    status = False
     # data = None
     not_default = True
 
-    try:
 
-        if (x == "" and y == ""):
-            x, y = win32api.GetCursorPos()
-            not_default = False
-        if (type_of_movement == "abs" or type_of_movement == "rel"):
-            x, y = int(x), int(y)
-        else:
-            raise Exception("Please check the type of movement.")
-
-        if x and y:
-            if type_of_movement == "abs":
-                x, y = int(x), int(y)
-            elif type_of_movement == "rel" and not_default:
-                current_x, current_y = win32api.GetCursorPos()
-                x, y = int(x), int(y)
-                current_x, current_y = int(current_x), int(current_y)
-                x, y = int(current_x + x), int(current_y + y)
-
-            if no_of_clicks == 1:
-                pwa.mouse.click(coords=(x, y), button=left_or_right)
-            elif no_of_clicks == 2:
-                pwa.mouse.double_click(coords=(x, y), button=left_or_right)
-            else:
-                for i in range(no_of_clicks):
-                    pwa.mouse.click(coords=(x, y), button=left_or_right)
-
-            status = True
-        else:
-            raise Exception("X and Y co-ordinates are required.")
-
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
+    if (x == "" and y == ""):
+        x, y = win32api.GetCursorPos()
+        not_default = False
+    if (type_of_movement == "abs" or type_of_movement == "rel"):
+        x, y = int(x), int(y)
     else:
-        status = True
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status]
+        raise Exception("Please check the type of movement.")
+
+    if x and y:
+        if type_of_movement == "abs":
+            x, y = int(x), int(y)
+        elif type_of_movement == "rel" and not_default:
+            current_x, current_y = win32api.GetCursorPos()
+            x, y = int(x), int(y)
+            current_x, current_y = int(current_x), int(current_y)
+            x, y = int(current_x + x), int(current_y + y)
+
+        if no_of_clicks == 1:
+            pwa.mouse.click(coords=(x, y), button=left_or_right)
+        elif no_of_clicks == 2:
+            pwa.mouse.double_click(coords=(x, y), button=left_or_right)
+        else:
+            for i in range(no_of_clicks):
+                pwa.mouse.click(coords=(x, y), button=left_or_right)
 
 def mouse_search_snip_return_coordinates_x_y(img="", wait=10):
     """
@@ -94,30 +77,16 @@ def mouse_search_snip_return_coordinates_x_y(img="", wait=10):
 
     # Response section
     error = None
-    status = False
     data = None
     i = 0
 
-    try:
-        if not img:
-            raise Exception("Image path is required.")
-        pos = ps.locateCenterOnScreen(image=img, minSearchTime=wait)
-        # while pos != None or i < int(wait):
-        #     time.sleep(0.2)
-        #     pos = ps.locateCenterOnScreen(img)
-        #     i += 1
-        if pos:
-            data = (pos[0], pos[1])
-
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-    else:
-        if pos:
-            status = True
-        else:
-            status = False
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status, data]
+    if not img:
+        raise Exception("Image path is required.")
+    pos = ps.locateCenterOnScreen(image=img, minSearchTime=wait)
+    # while pos != None or i < int(wait):
+    #     time.sleep(0.2)
+    #     pos = ps.locateCenterOnScreen(img)
+    #     i += 1
+    if pos:
+        data = (pos[0], pos[1])
+    return [data]

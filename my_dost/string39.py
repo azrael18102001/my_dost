@@ -15,27 +15,17 @@ def string_extract_only_alphabets(inputString=""):
     from my_dost.CrashHandler import report_error
     # Response section
     error = None
-    status = False
     data = None
 
-    try:
-        if not inputString:
-            raise Exception("Input String cannot be empty")
+    if not inputString:
+        raise Exception("Input String cannot be empty")
 
-        data = ''.join(e for e in inputString if e.isalpha())
+    data = ''.join(e for e in inputString if e.isalpha())
 
-        # If the function returns a value, it should be assigned to the data variable.
-        # data = value
-    except Exception as ex:
-        report_error(ex)
-        error = ex
+    # If the function returns a value, it should be assigned to the data variable.
+    # data = value
 
-    else:
-        status = True
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status, data]
+    return data
 
 
 def string_extract_only_numbers(inputString=""):
@@ -54,27 +44,16 @@ def string_extract_only_numbers(inputString=""):
 
     # Response section
     error = None
-    status = False
     data = None
 
-    try:
-        if not inputString:
-            raise Exception("Input String cannot be empty")
 
-        data = ''.join(e for e in inputString if e.isnumeric())
+    data = ''.join(e for e in inputString if e.isnumeric())
 
         # If the function returns a value, it should be assigned to the data variable.
         # data = value
-    except Exception as ex:
-        report_error(ex)
-        error = ex
 
-    else:
-        status = True
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status, data]
+    
+    return data
 
 
 def string_remove_special_characters(inputStr=""):
@@ -94,25 +73,10 @@ def string_remove_special_characters(inputStr=""):
 
     # Response section
     error = None
-    status = False
     data = None
 
-    try:
-        if not inputStr:
-            raise Exception("Input String cannot be empty")
-
-        if inputStr:
-            data = ''.join(e for e in inputStr if e.isalnum())
+    data = ''.join(e for e in inputStr if e.isalnum())
 
         # If the function returns a value, it should be assigned to the data variable.
         # data = value
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
-    else:
-        status = True
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status, data]
+    return data

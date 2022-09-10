@@ -19,28 +19,15 @@ def clipboard_set_data(data, format_id=win32clipboard.CF_UNICODETEXT):
 
     # Response section
     error = None
-    status = False
 
     # Logic Section
+    win32clipboard.OpenClipboard()
     try:
-        win32clipboard.OpenClipboard()
-        try:
-            win32clipboard.EmptyClipboard()
-            win32clipboard.SetClipboardData(format_id, data)
-        finally:
-            win32clipboard.CloseClipboard()
-
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
-    else:
-        status = True
-
+        win32clipboard.EmptyClipboard()
+        win32clipboard.SetClipboardData(format_id, data)
     finally:
-        if error is not None:
-            raise Exception(error)
-        return [status]
+        win32clipboard.CloseClipboard()
+
 
 
 def GetClipboardFormats():
@@ -78,21 +65,10 @@ def clipboard_get_data(format_id=win32clipboard.CF_UNICODETEXT):
     data = None
 
     # Logic Section
-    try:
-        if format_id not in GetClipboardFormats():
-            raise RuntimeError("That format is not available")
-        win32clipboard.OpenClipboard()
-        data = win32clipboard.GetClipboardData(format_id)
-        win32clipboard.CloseClipboard()
+    if format_id not in GetClipboardFormats():
+        raise RuntimeError("That format is not available")
+    win32clipboard.OpenClipboard()
+    data = win32clipboard.GetClipboardData(format_id)
+    win32clipboard.CloseClipboard()
 
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
-    else:
-        status = True
-
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status, data]
+    return data

@@ -53,24 +53,12 @@ def window_show_desktop():
 
     # Response section
     error = None
-    status = False
-    # data = None
 
-    try:
-        pwa.keyboard.send_keys('{VK_RWIN down} d {VK_RWIN up}')
+
+    pwa.keyboard.send_keys('{VK_RWIN down} d {VK_RWIN up}')
 
         # If the function returns a value, it should be assigned to the data variable.
         # data = value
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
-    else:
-        status = True
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status]
 
 
 def window_get_active_window():
@@ -95,25 +83,14 @@ def window_get_active_window():
 
     # Response section
     error = None
-    status = False
     data = None
-
-    try:
-        _title = win32gui.GetWindowText(win32gui.GetForegroundWindow())
-        data = _title
+    
+    _title = win32gui.GetWindowText(win32gui.GetForegroundWindow())
+    data = _title
 
         # If the function returns a value, it should be assigned to the data variable.
         # data = value
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
-    else:
-        status = True
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status, data]
+    return data
 
 
 def window_activate_window(window_title=''):
@@ -136,39 +113,27 @@ def window_activate_window(window_title=''):
 
     # Response section
     error = None
-    status = False
     # data = None
 
-    try:
-        if not window_title:
-            raise Exception('Window title name is empty.')
+    if not window_title:
+        raise Exception('Window title name is empty.')
 
-        item, window_found = _window_find_exact_name(window_title)
-        if window_found:
-            windw = gw.getWindowsWithTitle(item)[0]
+    item, window_found = _window_find_exact_name(window_title)
+    if window_found:
+        windw = gw.getWindowsWithTitle(item)[0]
 
-            try:
-                windw.activate()
-            except:
-                windw.minimize()
-                windw.maximize()
+        try:
+            windw.activate()
+        except:
+            windw.minimize()
+            windw.maximize()
 
-        else:
-            raise Exception(
-                'Window title name {} not found'.format(window_title))
+    else:
+        raise Exception(
+            'Window title name {} not found'.format(window_title))
 
         # If the function returns a value, it should be assigned to the data variable.
         # data = value
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
-    else:
-        status = True
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status]
 
 
 def window_get_all_opened_titles_windows():
@@ -192,29 +157,18 @@ def window_get_all_opened_titles_windows():
 
     # Response section
     error = None
-    status = False
     data = None
 
-    try:
-        allTitles_lst = []
-        lst = gw.getAllTitles()
-        for item in lst:
-            if str(item).strip() != "" and str(item).strip() not in allTitles_lst:
-                allTitles_lst.append(str(item).strip())
-        data = allTitles_lst
+    allTitles_lst = []
+    lst = gw.getAllTitles()
+    for item in lst:
+        if str(item).strip() != "" and str(item).strip() not in allTitles_lst:
+            allTitles_lst.append(str(item).strip())
+    data = allTitles_lst
 
         # If the function returns a value, it should be assigned to the data variable.
         # data = value
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
-    else:
-        status = True
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status, data]
+    return data
 
 
 def window_maximize_windows(windowName=""):
@@ -238,33 +192,22 @@ def window_maximize_windows(windowName=""):
 
     # Response section
     error = None
-    status = False
     # data = None
 
-    try:
-        if not windowName:
-            raise Exception('Window title name is empty.')
+  
+    if not windowName:
+        raise Exception('Window title name is empty.')
 
-        item, window_found = _window_find_exact_name(windowName)
-        if window_found:
-            windw = gw.getWindowsWithTitle(item)[0]
-            windw.maximize()
+    item, window_found = _window_find_exact_name(windowName)
+    if window_found:
+        windw = gw.getWindowsWithTitle(item)[0]
+        windw.maximize()
 
-        else:
-            Exception('Window title name {} not found'.format(windowName))
+    else:
+        Exception('Window title name {} not found'.format(windowName))
 
         # If the function returns a value, it should be assigned to the data variable.
         # data = value
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
-    else:
-        status = True
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status]
 
 
 def window_minimize_windows(windowName=""):
@@ -287,32 +230,21 @@ def window_minimize_windows(windowName=""):
 
     # Response section
     error = None
-    status = False
+    
     # data = None
+    
+    if not windowName:
+        raise Exception('Window title name is empty.')
 
-    try:
-        if not windowName:
-            raise Exception('Window title name is empty.')
-
-        item, window_found = _window_find_exact_name(windowName)
-        if window_found:
-            windw = gw.getWindowsWithTitle(item)[0]
-            windw.minimize()
-        else:
-            Exception('Window title name {} not found'.format(windowName))
+    item, window_found = _window_find_exact_name(windowName)
+    if window_found:
+        windw = gw.getWindowsWithTitle(item)[0]
+        windw.minimize()
+    else:
+        Exception('Window title name {} not found'.format(windowName))
 
         # If the function returns a value, it should be assigned to the data variable.
         # data = value
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
-    else:
-        status = True
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status]
 
 
 def window_close_windows(windowName=""):
@@ -335,32 +267,20 @@ def window_close_windows(windowName=""):
 
     # Response section
     error = None
-    status = False
     # data = None
 
-    try:
-        if not windowName:
-            raise Exception('Window title name is empty.')
+    if not windowName:
+        raise Exception('Window title name is empty.')
 
-        item, window_found = _window_find_exact_name(windowName)
-        if window_found:
-            windw = gw.getWindowsWithTitle(item)[0]
-            windw.close()
-        else:
-            Exception('Window title name {} not found'.format(windowName))
+    item, window_found = _window_find_exact_name(windowName)
+    if window_found:
+        windw = gw.getWindowsWithTitle(item)[0]
+        windw.close()
+    else:
+        Exception('Window title name {} not found'.format(windowName))
 
         # If the function returns a value, it should be assigned to the data variable.
         # data = value
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
-    else:
-        status = True
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status]
 
 
 def launch_any_exe_bat_application(pathOfExeFile=""):
@@ -387,31 +307,19 @@ def launch_any_exe_bat_application(pathOfExeFile=""):
 
     # Response section
     error = None
-    status = False
     # data = None
 
+    if not pathOfExeFile:
+        raise Exception('Path of the exe file is empty.')
+
     try:
-        if not pathOfExeFile:
-            raise Exception('Path of the exe file is empty.')
-
-        try:
-            os.startfile(pathOfExeFile)
-            time.sleep(2)
-            hwnd = win32gui.GetForegroundWindow()
-            win32gui.ShowWindow(hwnd, win32con.SW_MAXIMIZE)
-            status = True
-        except Exception:
-            os.startfile(pathOfExeFile)
-
-        # If the function returns a value, it should be assigned to the data variable.
-        # data = value
-    except Exception as ex:
-        report_error(ex)
-        error = ex
-
-    else:
+        os.startfile(pathOfExeFile)
+        time.sleep(2)
+        hwnd = win32gui.GetForegroundWindow()
+        win32gui.ShowWindow(hwnd, win32con.SW_MAXIMIZE)
         status = True
-    finally:
-        if error is not None:
-            raise Exception(error)
-        return [status]
+    except Exception:
+        os.startfile(pathOfExeFile)
+
+    # If the function returns a value, it should be assigned to the data variable.
+    # data = value

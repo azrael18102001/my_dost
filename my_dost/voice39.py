@@ -94,52 +94,43 @@ def speech_to_text():
     energy_threshold = [3000]
 
     unknown = False
-    status = False
     data = None
 
-    try:
-        while True:
-            with sr.Microphone() as source:
-                recognizer.dynamic_energy_threshold = True
-                if recognizer.energy_threshold in energy_threshold or recognizer.energy_threshold <= \
-                        sorted(energy_threshold)[-1]:
-                    recognizer.energy_threshold = sorted(
-                        energy_threshold)[-1]
-                else:
-                    energy_threshold.append(
-                        recognizer.energy_threshold)
+    while True:
+        with sr.Microphone() as source:
+            recognizer.dynamic_energy_threshold = True
+            if recognizer.energy_threshold in energy_threshold or recognizer.energy_threshold <= \
+                    sorted(energy_threshold)[-1]:
+                recognizer.energy_threshold = sorted(
+                    energy_threshold)[-1]
+            else:
+                energy_threshold.append(
+                    recognizer.energy_threshold)
 
-                recognizer.pause_threshold = 0.8
+            recognizer.pause_threshold = 0.8
 
-                recognizer.adjust_for_ambient_noise(source)
+            recognizer.adjust_for_ambient_noise(source)
 
-                try:
-                    if not unknown:
-                        text_to_speech("Speak now")
-                    audio = recognizer.listen(source)
-                    data = recognizer.recognize_google(audio)
-                    status = True
-                    # return [status, query]
-                except AttributeError:
-                    text_to_speech(
-                        "Could not find PyAudio or no Microphone input device found. It may be being used by "
-                        "another "
-                        "application.")
-                    # sys.exit()
-                except sr.UnknownValueError:
-                    unknown = True
-                except sr.RequestError as e:
-                    print("Try Again")
+            try:
+                if not unknown:
+                    text_to_speech("Speak now")
+                audio = recognizer.listen(source)
+                data = recognizer.recognize_google(audio)
+                status = True
+                # return [status, query]
+            except AttributeError:
+                text_to_speech(
+                    "Could not find PyAudio or no Microphone input device found. It may be being used by "
+                    "another "
+                    "application.")
+                # sys.exit()
+            except sr.UnknownValueError:
+                unknown = True
+            except sr.RequestError as e:
+                print("Try Again")
 
-                # Windows OS - Python 3.8
-    except OSError:
-        raise Exception(
-            "No input device found or it may be being used by another application.")
-    except Exception as ex:
-        report_error(ex)
-
-    finally:
-        return [status, data]
+            # Windows OS - Python 3.8
+    return data
 
 
 def text_to_speech(audio, show=True):
@@ -159,20 +150,9 @@ def text_to_speech(audio, show=True):
     # from gtts import gTTS  # Google Text to Speech
     # from gtts.tts import gTTSError
     import os
-
-    status = False
-
-    try:
-        text_to_speech_offline(audio, show)
-
-    except Exception as ex:
-        report_error(ex)
-        status = False
-
-    else:
-        status = True
-    finally:
-        return [status]
+    
+    
+    text_to_speech_offline(audio, show)
 
 
 def text_to_speech_offline(audio, show=True, rate=170):
@@ -192,26 +172,23 @@ def text_to_speech_offline(audio, show=True, rate=170):
     import pyttsx3
     import sys
 
-    try:
-        if is_speaker_connected:
-            engine = pyttsx3.init('sapi5')
-            voices = engine.getProperty('voices')
-            voice = random.choice(voices)  # Randomly decide male/female voice
-            engine.setProperty('voice', voice.id)
 
-            engine.setProperty('rate', rate)
-            engine.say(audio)
-            engine.runAndWait()
+    if is_speaker_connected:
+        engine = pyttsx3.init('sapi5')
+        voices = engine.getProperty('voices')
+        voice = random.choice(voices)  # Randomly decide male/female voice
+        engine.setProperty('voice', voice.id)
 
-        if type(audio) is list:
-            if show:
-                print(' '.join(audio))
-        else:
-            if show:
-                print(str(audio))
-    except Exception as ex:
-        print(ex)
-        sys.exit()
+        engine.setProperty('rate', rate)
+        engine.say(audio)
+        engine.runAndWait()
+
+    if type(audio) is list:
+        if show:
+            print(' '.join(audio))
+    else:
+        if show:
+            print(str(audio))
 
 
 # text_to_speech_offline("Hello")
