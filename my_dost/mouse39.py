@@ -89,4 +89,4 @@ def mouse_search_snip_return_coordinates_x_y(img="", wait=10):
     #     i += 1
     if pos:
         data = (pos[0], pos[1])
-    return [data]
+    return data
